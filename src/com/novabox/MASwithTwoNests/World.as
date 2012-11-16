@@ -5,8 +5,8 @@
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Point;
-	
-	
+	import com.equipe.EquipeGangnam;
+	import com.equipe.EquipeAgentType;
 	/**
 	 * Cognitive Multi-Agent System Example
 	 * Part 2 : Two distinct termite nests
@@ -47,9 +47,11 @@
 																0xAA0000,
 																new Array(AgentType.AGENT_BOT));
 																
-															
+		public static const GANGNAM_TEAM:BotTeam = new BotTeam(	"GangnamTeam", 
+																0x006600, 
+																new Array(EquipeAgentType.EQUIPE_BOT));
 		
-		public static const ALL_TEAMS:Array = new Array(CUSTOM_TEAM); 
+		public static const ALL_TEAMS:Array = new Array(CUSTOM_TEAM, GANGNAM_TEAM); 
 																
 		private var agents:Array;
 
