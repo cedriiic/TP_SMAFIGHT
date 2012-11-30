@@ -15,20 +15,23 @@
 			rules = new Array();
 			
 			//Recherche de ressource
-			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.aucuneRessourceTrouvee)));
+			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource)));
+			AddRule(new Rule(FactBase.vaChercherRessourcePlusPres, new Array(FactBase.nePortePasDeRessource, FactBase.connaitDesRessources)));
 			
 			//Détection
-			AddRule(new Rule(FactBase.recupereInfosRessource, FactBase.detecteRessource));
-			AddRule(new Rule(FactBase.communiquerInfosRessource, FactBase.detecteBotAllie));
-			AddRule(new Rule(FactBase.recupereInfosBaseEnnemie, FactBase.detecteBaseEnnemie));
-			AddRule(new Rule(FactBase.recupereInfosBaseAlliee, FactBase.detecteBaseAlliee));
+			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteRessource)));
+			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteBaseEnnemie)));
+			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteBaseAlliee)));
+			
+			AddRule(new Rule(FactBase.communiquerInfosRessource, new Array(FactBase.detecteBotAllie)));
 			
 			//Collision
 			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneRessource, FactBase.nePortePasDeRessource)));
 			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneBaseEnnemie, FactBase.nePortePasDeRessource)));
+			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneBotEnnemi, FactBase.nePortePasDeRessource)));
 			
 			//Porte une ressource
-			AddRule(new Rule(FactBase.vaALaBaseAlliee, FactBase.porteRessource));
+			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource)));
 			
 			
 		}

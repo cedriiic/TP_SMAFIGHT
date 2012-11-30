@@ -15,7 +15,8 @@
 		
 		public static const porteRessource:Fact 		= new Fact("porteRessource");
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
-		public static const aucuneRessourceTrouvee:Fact = new Fact("aucuneRessourceTrouvee");
+		public static const neConnaitPasDeRessource:Fact = new Fact("aucuneRessourceTrouvee");
+		public static const connaitDesRessources:Fact		= new Fact("connaitRessource");
 		
 		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
 		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
@@ -32,19 +33,19 @@
 		public static const aUnOrdre:Fact 				= new Fact("aUnOrdre");
 		public static const naPasDOrdre:Fact 			= new Fact("naPasDOrdre");
 		
-		public static const recupereInfosRessource 		= new Fact("recupererInfosRessource");
-		public static const communiquerInfosRessource 	= new Fact("communiquerInfosRessource");
-		public static const recupereInfosBaseAlliee 	= new Fact("recupereInfosBaseAlliee");
-		public static const recupereInfosBaseEnnemie 	= new Fact("recupereInfosBaseEnnemie");
+		public static const recupereInfosRessource:Fact 	= new Fact("recupererInfosRessource");
+		public static const communiquerInfosRessource:Fact 	= new Fact("communiquerInfosRessource");
+		//public static const recupereInfosBaseAlliee:Fact 	= new Fact("recupereInfosBaseAlliee");
+		//public static const recupereInfosBaseEnnemie:Fact 	= new Fact("recupereInfosBaseEnnemie");
 		
-		public static const poseRessource:int							= new Fact("poseRessource");
-		public static const prendRessource:int							= new Fact("prendRessource");
-		public static const vaChercherRessourcePlusPres:int				= new Fact("vaChercherRessourcePlusPres");
-		public static const vaChercherRessourceAvecLePlusDeCapacite:int	= new Fact("vaChercherRessourceAvecLePlusDeCapacite");
-		public static const vaExplorer:int								= new Fact("vaExplorer");
-		public static const vaALaBaseAlliee:int							= new Fact("vaALaBaseAlliee");
-		public static const vaALaBaseEnnemieLaPlusPres:int				= new Fact("vaALaBaseEnnemieLaPlusPres");
-		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= new Fact("vaALaBaseEnnemieAvecLePlusDeCapacite");
+		public static const poseRessource:Fact								= new Fact("poseRessource");
+		public static const prendRessource:Fact								= new Fact("prendRessource");
+		public static const vaChercherRessourcePlusPres:Fact				= new Fact("vaChercherRessourcePlusPres");
+		public static const vaChercherRessourceAvecLePlusDeCapacite:Fact	= new Fact("vaChercherRessourceAvecLePlusDeCapacite");
+		public static const vaExplorer:Fact									= new Fact("vaExplorer");
+		public static const vaALaBaseAlliee:Fact							= new Fact("vaALaBaseAlliee");
+		public static const vaALaBaseEnnemieLaPlusPres:Fact					= new Fact("vaALaBaseEnnemieLaPlusPres");
+		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:Fact		= new Fact("vaALaBaseEnnemieAvecLePlusDeCapacite");
 		
 		public function FactBase() 
 		{
@@ -68,6 +69,18 @@
 			
 			AddFact(aUnOrdre);
 			AddFact(naPasDOrdre);
+			
+			AddFact(recupereInfosRessource);
+			AddFact(communiquerInfosRessource);
+			
+			AddFact(poseRessource);
+			AddFact(prendRessource);
+			AddFact(vaChercherRessourcePlusPres);
+			AddFact(vaChercherRessourceAvecLePlusDeCapacite);
+			AddFact(vaExplorer);
+			AddFact(vaALaBaseAlliee);
+			AddFact(vaALaBaseEnnemieLaPlusPres);
+			AddFact(vaALaBaseEnnemieAvecLePlusDeCapacite);
 		}
 		
 		public function AddFact(_fact:Fact) : void
