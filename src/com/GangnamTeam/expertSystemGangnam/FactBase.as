@@ -15,6 +15,7 @@
 		
 		public static const porteRessource:Fact 		= new Fact("porteRessource");
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
+		public static const aucuneRessourceTrouvee:Fact = new Fact("aucuneRessourceTrouvee");
 		
 		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
 		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
