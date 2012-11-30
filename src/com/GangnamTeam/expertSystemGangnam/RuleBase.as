@@ -29,6 +29,7 @@
 			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneRessource, FactBase.nePortePasDeRessource)));
 			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneBaseEnnemie, FactBase.nePortePasDeRessource)));
 			AddRule(new Rule(FactBase.prendRessource, new Array(FactBase.collisionneBotEnnemi, FactBase.nePortePasDeRessource)));
+			AddRule(new Rule(FactBase.poseRessource, new Array(FactBase.porteRessource, FactBase.collisionneBaseAlliee)));
 			
 			//Porte une ressource
 			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource)));
