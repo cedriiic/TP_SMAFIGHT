@@ -9,6 +9,7 @@ package com.GangnamTeam
 	import com.novabox.MASwithTwoNests.Resource;
 	import com.novabox.MASwithTwoNests.Agent;
 	import com.novabox.MASwithTwoNests.TimeManager;
+	import com.novabox.MASwithTwoNests.World;
 	
 	/**
 	 * ...
@@ -18,7 +19,6 @@ package com.GangnamTeam
 	{
 		private var systemeExpertGangnam:ExpertSystem;
 		
-<<<<<<< HEAD
 		//public static const poseRessource:int							= 1;
 		//public static const prendRessource:int							= 2;
 		//public static const vaChercherRessourcePlusPres:int				= 3;
@@ -27,17 +27,7 @@ package com.GangnamTeam
 		//public static const vaALaBaseAlliee:int							= 6;
 		//public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
 		//public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
-=======
-		public static const poseRessource:int							= 1;
-		public static const prendRessource:int							= 2;
-		public static const vaChercherRessourcePlusPres:int				= 3;
-		public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
-		public static const vaChercherRessourceLaPlusRecente:int		= 5;
-		public static const vaExplorer:int								= 6;
-		public static const vaALaBaseAlliee:int							= 7;
-		public static const vaALaBaseEnnemieLaPlusPres:int				= 8;
-		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 9;
->>>>>>> 31099ed5dbb5cd15cc768a9e380d6bcc6186cf69
+
 		
 		private var listeRessources:Array;
 	
@@ -89,9 +79,14 @@ package com.GangnamTeam
 				//(normalement cette confrontation de regles est impossible, simple sécurité) 
 				indice = tabFaitsFinaux.length - 1;
 
-			//if (tabFaitsFinaux [indice] == FactBase.aucuneRessourceTrouvee) 	
+			if (tabFaitsFinaux [indice] == FactBase.aucuneRessourceTrouvee) 	
 				Explorer();
-			//else if (tabFaitsFinaux [indice] == FactBase.EVENT_SUIVRE) 	
+			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
+				PoseRessource();
+			else if (tabFaitsFinaux [indice] == FactBase.prendRessource)
+				PrendRessource();
+			//else if ()
+			
 				//Call (_pokerTable.GetValueToCall());
 			//else if (tabFaitsFinaux [indice] == FactBase.EVENT_RELANCER) 	
 				// On effectue une relance aléatoire comprise entre 1 et 4 fois la big blind
@@ -104,33 +99,88 @@ package com.GangnamTeam
 		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
 		{
-			var collidedAgent:Agent = _event.GetAgent();
 			
-			if (collidedAgent.GetType() == AgentType.AGENT_RESOURCE)
-			{
-				if (IsCollided(collidedAgent))
+			var _collidedAgent:Agent = _event.GetAgent();
+			
+			// Collision 
+			if (IsCollided(_collidedAgent)) {
+				if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
+					systemeExpertGangnam.SetFactValue(FactBase.collisionneRessource, true);
+				if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
 				{
-					
-					if (!HasResource())
-					{
-						(collidedAgent as Resource).DecreaseLife();
-						SetResource(true);
-					}
-					else
-					{
-						(collidedAgent as Resource).IncreaseLife();
-						SetResource(false);			
-					}
-					ChangeDirection();
+					if (isBaseAlliee(_collidedAgent as BotHome))
+						systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseAlliee, true);
+					else if (!isBaseAlliee(_collidedAgent as BotHome))
+						systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseEnnemie, true);
+				}
+				if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
+				{
+					if (isBotAllie(_collidedAgent as Bot))
+						systemeExpertGangnam.SetFactValue(FactBase.collisionneBotAllie, true);
+					else if (!isBotAllie(_collidedAgent as Bot))
+						systemeExpertGangnam.SetFactValue(FactBase.collisionneBotEnnemi, true);
 				}
 			}
-			else if (collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
+			// Perception
+			else
 			{
-				if (HasResource())
+				if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
+					systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
+				if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
 				{
-					(collidedAgent as BotHome).AddResource();
-					SetResource(false);
+					if (isBaseAlliee(_collidedAgent as BotHome))
+						systemeExpertGangnam.SetFactValue(FactBase.detecteBaseAlliee, true);
+					else if (!isBaseAlliee(_collidedAgent as BotHome))
+						systemeExpertGangnam.SetFactValue(FactBase.detecteBaseEnnemie, true);
 				}
+				if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
+				{
+					if (isBotAllie(_collidedAgent as Bot))
+						systemeExpertGangnam.SetFactValue(FactBase.detecteBotAllie, true);
+					else if (!isBotAllie(_collidedAgent as Bot))
+						systemeExpertGangnam.SetFactValue(FactBase.detecteBotEnnemi, true);
+				}
+			}
+			//if (!HasResource())
+		}
+		
+		
+		
+		public function isBaseAlliee (_botHome:BotHome) : Boolean
+		{
+			return (_botHome.GetTeamId() == World.GANGNAM_TEAM.GetId());
+		}
+		
+		public function isBotAllie (_bot:Bot) : Boolean
+		{
+			return (_bot.GetTeamId() == World.GANGNAM_TEAM.GetId());
+		}
+		
+		public function PrendRessource (_collidedAgent:Agent) : void
+		{
+			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
+			{
+				(_collidedAgent as Resource).DecreaseLife();
+				SetResource(true);
+			}
+			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
+			{
+				(_collidedAgent as BotHome).TakeResource();
+				SetResource(true);
+			}
+		}
+		
+		public function PoseRessource (_collidedAgent:Agent) : void
+		{
+			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
+			{
+				(_collidedAgent as Resource).IncreaseLife();
+				SetResource(false);
+			}
+			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
+			{
+				(_collidedAgent as BotHome).AddResource();
+				SetResource(false);
 			}
 		}
 		
