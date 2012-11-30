@@ -1,5 +1,6 @@
 package com.GangnamTeam 
 {
+	import com.GangnamTeam.expertSystemGangnam.ExpertSystem;
 	import com.novabox.MASwithTwoNests.AgentCollideEvent;
 	import com.novabox.MASwithTwoNests.AgentType;
 	import com.novabox.MASwithTwoNests.Bot;
@@ -13,9 +14,19 @@ package com.GangnamTeam
 	 */
 	public class BotGangnam extends Bot 
 	{
+		private var systemeExpertGangnam:ExpertSystem;
+		
+		public static const poseRessource:int							= 1;
+		public static const prendRessource:int							= 2;
+		public static const vaChercherRessourcePlusPres:int				= 3;
+		public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
+		public static const vaExplorer:int								= 5;
+		public static const vaALaBaseAlliee:int							= 6;
+		public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
+		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
 		
 		private var listeRessources:Array;
-		
+	
 		
 		public function BotGangnam(_type:AgentType) 
 		{
@@ -26,8 +37,54 @@ package com.GangnamTeam
 		
 		override public function Update() : void
 		{
-			
+			Perception();
+			Analyse();
+			Action();
 		}		
+		
+		public function Perception() : void {
+			// On reset les faits
+			systemeExpertGangnam.ResetFacts();
+			
+			// appel fonctions qui set les faits
+			
+		}
+		
+		public function Analyse() : void {
+
+			systemeExpertGangnam.InferForward();
+			var inferedFacts:Array = systemeExpertGangnam.GetInferedFacts();
+			//trace("Infered Facts:");
+
+			systemeExpertGangnam.InferBackward();
+			var factsToAsk:Array = systemeExpertGangnam.GetFactsToAsk();
+			//trace("Facts to ask :");
+		}
+		
+		public function Action() : void {
+			// Recupere le ou les faits finaux (normalement un seul)
+			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
+			var indice:int;
+			
+			if (tabFaitsFinaux.length == 1)
+				indice = 0;
+			else
+				// Comme la table de regle va de check/Fold à Raise, on prend la dernier indice, ce qui permet de choisir de suivre meme si une regle check/fold est vraie 
+				//(normalement cette confrontation de regles est impossible, simple sécurité) 
+				indice = tabFaitsFinaux.length - 1;
+
+			/*if (tabFaitsFinaux [indice] == FactBase.EVENT_CHECK_FOLD && this.CanCheck(_pokerTable)) 	
+				Check ();
+			else if (tabFaitsFinaux [indice] == FactBase.EVENT_SUIVRE) 	
+				Call (_pokerTable.GetValueToCall());
+			else if (tabFaitsFinaux [indice] == FactBase.EVENT_RELANCER) 	
+				// On effectue une relance aléatoire comprise entre 1 et 4 fois la big blind
+				Raise(Math.floor((Math.random() * 3) + 1) * _pokerTable.GetBigBlind(), _pokerTable.GetValueToCall());
+			else if (this.CanCheck(_pokerTable))
+				Check();
+			else
+				Fold ();*/
+		}
 		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
 		{
@@ -37,6 +94,7 @@ package com.GangnamTeam
 			{
 				if (IsCollided(collidedAgent))
 				{
+					
 					if (!HasResource())
 					{
 						(collidedAgent as Resource).DecreaseLife();
@@ -59,6 +117,8 @@ package com.GangnamTeam
 				}
 			}
 		}
+		
+		
 		
 		public function getRessourceByPointeur (_maRessource:Ressource) : Ressource
 		{

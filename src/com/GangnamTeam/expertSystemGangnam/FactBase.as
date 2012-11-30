@@ -14,14 +14,20 @@
 		
 		private var factValues:Array;
 		
-		public static const porteRessource = new Fact("porteRessource");
-		public static const nePortePasDeRessource = new Fact("nePortePasDeRessource");
+		public static const porteRessource 			= new Fact("porteRessource");
+		public static const nePortePasDeRessource 	= new Fact("nePortePasDeRessource");
 		
-		public static const detecteRessource = new Fact("detecteRessource");
-		public static const detecteBotEnnemi = new Fact("detecteBotEnnemi");
-		public static const detecteBotAllie = new Fact("detecteBotAllie");
-		public static const detecteBaseEnnemie = new Fact("detecteBaseEnnemie");
-		public static const detecteBaseAlliee = new Fact("detecteBaseAlliee");
+		public static const detecteRessource 		= new Fact("detecteRessource");
+		public static const detecteBotEnnemi 		= new Fact("detecteBotEnnemi");
+		public static const detecteBotAllie 		= new Fact("detecteBotAllie");
+		public static const detecteBaseEnnemie 		= new Fact("detecteBaseEnnemie");
+		public static const detecteBaseAlliee 		= new Fact("detecteBaseAlliee");
+		
+		public static const collisionneRessource 	= new Fact("collisionneRessource");
+		public static const collisionneBotEnnemi 	= new Fact("collisionneBotEnnemi");
+		public static const collisionneBotAllie 	= new Fact("collisionneBotAllie");
+		public static const collisionneBaseEnnemie 	= new Fact("collisionneBaseEnnemie");
+		public static const collisionneBaseAlliee 	= new Fact("collisionneBaseAlliee");
 		
 		public static const aUnOrdre = new Fact("AUnOrdre");
 		public static const naPasDOrdre = new Fact("naPasDOrdre");
