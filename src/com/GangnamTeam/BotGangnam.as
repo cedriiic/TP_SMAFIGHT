@@ -1,12 +1,14 @@
 package com.GangnamTeam 
 {
 	import com.GangnamTeam.expertSystemGangnam.ExpertSystem;
+	import com.GangnamTeam.expertSystemGangnam.FactBase;
 	import com.novabox.MASwithTwoNests.AgentCollideEvent;
 	import com.novabox.MASwithTwoNests.AgentType;
 	import com.novabox.MASwithTwoNests.Bot;
 	import com.novabox.MASwithTwoNests.BotHome;
 	import com.novabox.MASwithTwoNests.Resource;
 	import com.novabox.MASwithTwoNests.Agent;
+	import com.novabox.MASwithTwoNests.TimeManager;
 	
 	/**
 	 * ...
@@ -16,6 +18,7 @@ package com.GangnamTeam
 	{
 		private var systemeExpertGangnam:ExpertSystem;
 		
+<<<<<<< HEAD
 		//public static const poseRessource:int							= 1;
 		//public static const prendRessource:int							= 2;
 		//public static const vaChercherRessourcePlusPres:int				= 3;
@@ -24,14 +27,27 @@ package com.GangnamTeam
 		//public static const vaALaBaseAlliee:int							= 6;
 		//public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
 		//public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
+=======
+		public static const poseRessource:int							= 1;
+		public static const prendRessource:int							= 2;
+		public static const vaChercherRessourcePlusPres:int				= 3;
+		public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
+		public static const vaChercherRessourceLaPlusRecente:int		= 5;
+		public static const vaExplorer:int								= 6;
+		public static const vaALaBaseAlliee:int							= 7;
+		public static const vaALaBaseEnnemieLaPlusPres:int				= 8;
+		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 9;
+>>>>>>> 31099ed5dbb5cd15cc768a9e380d6bcc6186cf69
 		
 		private var listeRessources:Array;
 	
+		protected var updateTime:Number = 0;
 		
 		public function BotGangnam(_type:AgentType) 
 		{
 			listeRessources = new Array ();
 			systemeExpertGangnam = new ExpertSystem ();
+			updateTime = 0;
 			super(_type);
 		}
 		
@@ -73,17 +89,17 @@ package com.GangnamTeam
 				//(normalement cette confrontation de regles est impossible, simple sécurité) 
 				indice = tabFaitsFinaux.length - 1;
 
-			/*if (tabFaitsFinaux [indice] == FactBase.EVENT_CHECK_FOLD && this.CanCheck(_pokerTable)) 	
-				Check ();
-			else if (tabFaitsFinaux [indice] == FactBase.EVENT_SUIVRE) 	
-				Call (_pokerTable.GetValueToCall());
-			else if (tabFaitsFinaux [indice] == FactBase.EVENT_RELANCER) 	
+			//if (tabFaitsFinaux [indice] == FactBase.aucuneRessourceTrouvee) 	
+				Explorer();
+			//else if (tabFaitsFinaux [indice] == FactBase.EVENT_SUIVRE) 	
+				//Call (_pokerTable.GetValueToCall());
+			//else if (tabFaitsFinaux [indice] == FactBase.EVENT_RELANCER) 	
 				// On effectue une relance aléatoire comprise entre 1 et 4 fois la big blind
-				Raise(Math.floor((Math.random() * 3) + 1) * _pokerTable.GetBigBlind(), _pokerTable.GetValueToCall());
-			else if (this.CanCheck(_pokerTable))
-				Check();
-			else
-				Fold ();*/
+				//Raise(Math.floor((Math.random() * 3) + 1) * _pokerTable.GetBigBlind(), _pokerTable.GetValueToCall());
+			//else if (this.CanCheck(_pokerTable))
+				//Check();
+			//else
+				//Fold ();
 		}
 		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
@@ -118,7 +134,22 @@ package com.GangnamTeam
 			}
 		}
 		
-		
+		public function Explorer () : void
+		{
+			var elapsedTime:Number = TimeManager.timeManager.GetFrameDeltaTime();
+			
+			updateTime += elapsedTime;
+				
+			if (updateTime >=  directionChangeDelay)
+			{
+				ChangeDirection();
+				updateTime = 0;
+			}
+			
+			
+			 targetPoint.x = x + direction.x * speed * elapsedTime / 1000 ;
+			 targetPoint.y = y + direction.y * speed * elapsedTime / 1000;
+		}
 		
 		public function getRessourceByPointeur (_maRessource:Ressource) : Ressource
 		{
