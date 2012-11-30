@@ -27,6 +27,9 @@
 		public static const naPasDOrdre = new Fact("naPasDOrdre");
 		
 		public static const recupereInfosRessource = new Fact("RecupererInfosRessource");
+		public static const communiquerInfosRessource = new Fact("CommuniquerInfosRessource");
+		public static const recupereInfosBaseAlliee = new Fact("RecupereInfosBaseAlliee");
+		public static const recupereInfosBaseEnnemie = new Fact("RecupereInfosBaseEnnemie");
 		
 		public function FactBase() 
 		{
