@@ -29,81 +29,81 @@ package com.GangnamTeam
 			type 				= _type;
 		}
 		
-		public function get temps():int 
+		public function getTemps():int 
 		{
 			return temps;
 		}
 		
-		public function set temps(value:int):void 
+		public function setTemps(value:int):void 
 		{
 			temps = value;
 		}
 		
-		public function get positionX():int 
+		public function getPositionX():int 
 		{
 			return positionX;
 		}
 		
-		public function set positionX(value:int):void 
+		public function setPositionX(value:int):void 
 		{
 			positionX = value;
 		}
 		
-		public function get positionY():int 
+		public function getPositionY():int 
 		{
 			return positionY;
 		}
 		
-		public function set positionY(value:int):void 
+		public function setPositionY(value:int):void 
 		{
 			positionY = value;
 		}
 		
-		public function get capacite():int 
+		public function getCapacite():int 
 		{
 			return capacite;
 		}
 		
-		public function set capacite(value:int):void 
+		public function setCapacite(value:int):void 
 		{
 			capacite = value;
 		}
 		
-		public function get pointeurRessource():Agent 
+		public function getPointeurRessource():Agent 
 		{
 			return pointeurRessource;
 		}
 		
-		public function set pointeurRessource(value:Agent):void 
+		public function setPointeurRessource(value:Agent):void 
 		{
 			pointeurRessource = value;
 		}
 		
-		public function get type():int 
+		public function getType():int 
 		{
 			return type;
 		}
 		
-		public function set type(value:int):void 
+		public function setType(value:int):void 
 		{
 			type = value;
 		}
 		
 		public function estPlusRecentQue (_autreRessource:Ressource) : Boolean
 		{
-			return (this.temps > _autreRessource.temps);
+			return (this.temps > _autreRessource.getTemps());
 		}
 		
 		public function miseAJourDonnees (_autreRessource:Ressource) : void
 		{
-			if (this.pointeurRessource == _autreRessource.pointeurRessource)
+			if (this.pointeurRessource == _autreRessource.getPointeurRessource())
 			{
 				if (!estPlusRecentQue (_autreRessource))
 				{
-					this.temps 		= _autreRessource.temps;
-					this.capacite 	= _autreRessource.capacite;
-					this.positionX 	= _autreRessource.positionX;
-					this.positionY 	= _autreRessource.positionY;
+					this.temps 		= _autreRessource.getTemps();
+					this.capacite 	= _autreRessource.getCapacite();
+					this.positionX 	= _autreRessource.getPositionX();
+					this.positionY 	= _autreRessource.getPositionY();
 				}
 			}
 		}

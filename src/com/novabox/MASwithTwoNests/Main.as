@@ -276,7 +276,7 @@
 		
 		private function ShowWinner() : void
 		{
-			var winText = "";
+			var winText:String = "";
 			
 			var maxResource:int = 0;
 			var minResource:int = int.MAX_VALUE;

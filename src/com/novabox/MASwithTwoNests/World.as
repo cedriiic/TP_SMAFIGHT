@@ -1,6 +1,7 @@
 ﻿package com.novabox.MASwithTwoNests 
 {
 	import adobe.utils.ProductManager;
+	import com.GangnamTeam.GangnamType;
 	import com.novabox.DummyTeam.DummyType;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -53,9 +54,15 @@
 		public static const DUMMY_TEAM2:BotTeam = new BotTeam(	"Dummy 2",
 																0x00FF00,
 																new Array(DummyType.DummyBotType));
-
+																
 		
-		public static const ALL_TEAMS:Array = new Array(DUMMY_TEAM1, DUMMY_TEAM2); 
+		public static const GANGNAM_TEAM:BotTeam = new BotTeam(	"Gangnam",
+																0x00FFFF,
+																new Array(GangnamType.GangnamBotType));
+																
+		
+		
+		public static const ALL_TEAMS:Array = new Array(DUMMY_TEAM1, DUMMY_TEAM2, GANGNAM_TEAM); 
 																
 		private var agents:Array;
 
