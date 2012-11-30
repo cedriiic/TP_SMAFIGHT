@@ -1,4 +1,4 @@
-package com.equipe 
+package com.GangnamTeam 
 {
 	/**
 	 * ...

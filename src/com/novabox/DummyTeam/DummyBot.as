@@ -52,17 +52,20 @@
 			
 			if (collidedAgent.GetType() == AgentType.AGENT_RESOURCE)
 			{
-				if (!HasResource())
+				if (IsCollided(collidedAgent))
 				{
-					(collidedAgent as Resource).DecreaseLife();
-					SetResource(true);
+					if (!HasResource())
+					{
+						(collidedAgent as Resource).DecreaseLife();
+						SetResource(true);
+					}
+					else
+					{
+						(collidedAgent as Resource).IncreaseLife();
+						SetResource(false);			
+					}
+					ChangeDirection();
 				}
-				else
-				{
-					(collidedAgent as Resource).IncreaseLife();
-					SetResource(false);			
-				}
-				ChangeDirection();
 			}
 			else if (collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
 			{
