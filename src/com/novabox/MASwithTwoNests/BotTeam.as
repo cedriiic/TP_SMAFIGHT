@@ -18,6 +18,8 @@
 		
 		private var color:int;
 		
+		public var home:BotHome;
+		
 		public function BotTeam(_teamId:String, _color:int, _botTypes:Array) 
 		{
 			teamId = _teamId;
@@ -35,6 +37,7 @@
 		{
 			return color;
 		}
+
 		
 		public function Initialize(_botCount:int) : void
 		{
@@ -47,6 +50,8 @@
 			teamHome.SetTargetPoint(new Point(		teamHome.x,
 													teamHome.y));
 																
+					
+			home = teamHome;
 													
 			for (var i:int = 0; i < botTypes.length; i++)
 			{

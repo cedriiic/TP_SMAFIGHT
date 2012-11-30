@@ -78,7 +78,7 @@
 				
 		public function	InitSprites() : void
 		{
-			this.graphics.beginFill(0XAAAAAA, 0.5);
+			this.graphics.beginFill(0XAAAAAA, 0.);
 				this.graphics.drawCircle(0, 0, perceptionRadius);
 			this.graphics.endFill();
 			

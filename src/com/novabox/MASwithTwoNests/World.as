@@ -1,12 +1,13 @@
 ﻿package com.novabox.MASwithTwoNests 
 {
 	import adobe.utils.ProductManager;
+	import com.novabox.DummyTeam.DummyType;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Point;
-	import com.equipe.EquipeGangnam;
-	import com.equipe.EquipeAgentType;
+	
+	
 	/**
 	 * Cognitive Multi-Agent System Example
 	 * Part 2 : Two distinct termite nests
@@ -36,22 +37,25 @@
 		
 		//WORLD PARAMETERS
 		public static var HOME_RADIUS:Number						= 10;
-		public static var HOME_GETTING_BIGGER:Boolean				= true;
+		public static var HOME_GETTING_BIGGER:Boolean				= false;
 		public static var RESOURCE_RANDOM_START_LIFE:Boolean		= true;
 		public static var BOT_WITH_RESOURCE_SPEED_COEFF:Number	= 1;
-		public static var BOT_START_FROM_HOME:Boolean				= true;
+		public static var BOT_START_FROM_HOME:Boolean				= false;
 		
+		public static var RESOURCE_MIN_SPEED:Number					= 5;
+		public static var RESOURCE_MAX_SPEED:Number					= 20;
+		
+		public static const DUMMY_TEAM1:BotTeam = new BotTeam(	"Dummy 1",
+																0xAA0000,
+																new Array(DummyType.DummyBotType));
+																
+
+		public static const DUMMY_TEAM2:BotTeam = new BotTeam(	"Dummy 2",
+																0x00FF00,
+																new Array(DummyType.DummyBotType));
 
 		
-		public static const CUSTOM_TEAM:BotTeam = new BotTeam(	"CustomTeam",
-																0xAA0000,
-																new Array(AgentType.AGENT_BOT));
-																
-		public static const GANGNAM_TEAM:BotTeam = new BotTeam(	"GangnamTeam", 
-																0x006600, 
-																new Array(EquipeAgentType.EQUIPE_BOT));
-		
-		public static const ALL_TEAMS:Array = new Array(CUSTOM_TEAM, GANGNAM_TEAM); 
+		public static const ALL_TEAMS:Array = new Array(DUMMY_TEAM1, DUMMY_TEAM2); 
 																
 		private var agents:Array;
 
@@ -131,7 +135,7 @@
 				if (deadAgentIndex != -1)
 				{
 					var deadAgent:Agent = agents[deadAgentIndex];
-					stage.removeChild(deadAgent);
+					removeChild(deadAgent);
 					agents.splice(deadAgentIndex, 1);
 					deadAgentIndex = -1;
 				}
@@ -191,7 +195,7 @@
 		
 		public function AddAgent(_agent:Agent) : void
 		{
-			stage.addChild(_agent);
+			addChild(_agent);
 			agents.push(_agent);
 		}
 	}

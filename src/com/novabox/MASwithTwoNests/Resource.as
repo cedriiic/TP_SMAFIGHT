@@ -1,5 +1,6 @@
 ﻿package com.novabox.MASwithTwoNests 
 {
+	import flash.geom.Point;
 	
 	/**
 	 * Cognitive Multi-Agent System Example
@@ -13,10 +14,15 @@
 	{
 		private var life:Number;
 		
+		private var  speed:Number;
+		private var direction:Point;
+		private var changeDirectionDelay:Number;
+
 		public function Resource() 
 		{
 			super(AgentType.AGENT_RESOURCE);
 			life = 0;
+			changeDirectionDelay = 0;
 		}
 		
 		public function Initialize(_life:Number) : void
@@ -60,6 +66,23 @@
 		override public function Update() : void
 		{
 			DrawSprite();
+			ProcessPosition();
+		}
+		
+		private function ProcessPosition() : void 
+		{
+			changeDirectionDelay -= TimeManager.timeManager.GetFrameDeltaTime();
+			if (changeDirectionDelay <= 0) {
+				speed = (World.RESOURCE_MIN_SPEED + Math.random() * (World.RESOURCE_MAX_SPEED - World.RESOURCE_MIN_SPEED)) / 1000;
+				var newTarget:Point = new Point(World.WORLD_WIDTH * Math.random(), World.WORLD_HEIGHT * Math.random());
+				direction = newTarget.subtract(targetPoint);
+				changeDirectionDelay = direction.length / speed;
+				direction.normalize(1);
+			}
+			
+			var positionOffset:Point = direction.clone();
+			positionOffset.normalize(TimeManager.timeManager.GetFrameDeltaTime() * speed);
+			targetPoint = targetPoint.add(positionOffset);
 		}
 		
 		protected function DrawSprite() : void

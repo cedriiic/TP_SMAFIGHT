@@ -1,7 +1,10 @@
 ﻿package com.novabox.MASwithTwoNests 
 {
+	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.ui.ContextMenuBuiltInItems;
 	/**
 	 * Cognitive Multi-Agent System Example
 	 * Part 2 : Two distinct termite nests
@@ -19,6 +22,10 @@
 		
 		private var countText:TextField;
 		
+		private var  speed:Number;
+		private var direction:Point
+		private var changeDirectionDelay:Number;
+		
 		public function BotHome(_teamId:String, _color:int) 
 		{
 			super(AgentType.AGENT_BOT_HOME);
@@ -29,6 +36,8 @@
 			countText = new TextField();
 			countText.autoSize = TextFieldAutoSize.CENTER;			
 			addChild(countText);
+			
+			changeDirectionDelay = 0;
 		}
 		
 		public function GetTeamId() : String
@@ -39,6 +48,23 @@
 		override public function Update() : void
 		{
 			DrawSprite();
+			ProcessPosition();
+		}
+		
+		private function ProcessPosition() : void 
+		{
+			changeDirectionDelay -= TimeManager.timeManager.GetFrameDeltaTime();
+			if (changeDirectionDelay <= 0) {
+				speed = (World.RESOURCE_MIN_SPEED + Math.random() * (World.RESOURCE_MAX_SPEED - World.RESOURCE_MIN_SPEED)) / 1000;
+				var newTarget:Point = new Point(World.WORLD_WIDTH * Math.random(), World.WORLD_HEIGHT * Math.random());
+				direction = newTarget.subtract(targetPoint);
+				changeDirectionDelay = direction.length / speed;
+				direction.normalize(1);
+			}
+			
+			var positionOffset:Point = direction.clone();
+			positionOffset.normalize(TimeManager.timeManager.GetFrameDeltaTime() * speed);
+			targetPoint = targetPoint.add(positionOffset);
 		}
 		
 		protected function DrawSprite() : void
@@ -63,6 +89,22 @@
 		public function AddResource() : void
 		{
 			resourceCount++;
+		}
+		
+		public function TakeResource() : void 
+		{
+			resourceCount--;
+			if (resourceCount < 0) resourceCount = 0;
+		}
+		
+		public function HasResource() : Boolean
+		{
+			return (resourceCount > 0);
+		}
+		
+		public function GetResourceCount() : int
+		{
+			return resourceCount;
 		}
 		
 	}
