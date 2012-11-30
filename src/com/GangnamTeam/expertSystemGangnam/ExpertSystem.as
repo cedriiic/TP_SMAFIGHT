@@ -1,23 +1,19 @@
-﻿package com.GangnamTeam.expertSystemGangnam 
+﻿package com.GangnamTeam.expertSystemGangnam  
 {
-	/**
-	 * Expert System 
-	 * 
-	 * @author Ophir / Nova-box
-	 * @version 1.0
-	 */
 	public class ExpertSystem
 	{
 		private var factBase:FactBase;
 		private var ruleBase:RuleBase;
 		
 		private var inferedFacts:Array;
+		private var factsToAsk:Array;
 		
 		public function ExpertSystem() 
 		{
 			factBase = new FactBase();
 			ruleBase = new RuleBase();	
 			inferedFacts = new Array();
+			
 		}
 
 		public function GetFactBase() : FactBase
@@ -112,7 +108,7 @@
 			}
 		}
 		
-		public function Infer() : void
+		public function InferForward() : void
 		{
 			ClearInferedFacts();
 			
@@ -152,6 +148,84 @@
 			trace(traceString);
 		}
 		
+		
+		public function GetFactsToAsk(): Array
+		{
+			return factsToAsk;
+		}
+		
+		public function InferBackward() : void
+		{
+			factsToAsk = new Array();
+			var finalFacts:Array = GetFinalFacts();
+			for each(var finalFact:Fact in finalFacts)
+			{
+				AddFactsToAsk(finalFact)
+			}
+		}
+		
+		public function AddFactsToAsk(_goal:Fact) : void
+		{
+			if (factBase.GetFactValue(_goal) == true) return;
+			for each(var rule:Rule in ruleBase.GetRules())
+			{
+				if (rule.GetGoal() == _goal)
+				{
+					for each(var premise:Fact in rule.GetPremises())
+					{
+						if (IsInitialFact(premise))
+						{
+							if (factsToAsk.indexOf(premise) == -1)
+							{
+								factsToAsk.push(premise);
+							}
+						}
+						else
+						{
+							AddFactsToAsk(premise);
+						}
+					}
+				}
+			}				
+		}
+		
+		public function GetFinalFacts() : Array
+		{
+			var result:Array = new Array();
+			for each(var rule:Rule in ruleBase.GetRules())
+			{
+				var goal:Fact = rule.GetGoal();
+				if (IsFinalFact(goal))
+				{
+					result.push(goal);
+				}
+			}
+			return result;
+		}
+		
+		public function IsFinalFact(_fact:Fact) : Boolean
+		{
+			for each(var rule:Rule in ruleBase.GetRules())
+			{
+					if (rule.GetPremises().indexOf(_fact) != -1)
+					{
+						return false;
+					}
+			}
+			return true;
+		}
+		
+		public function IsInitialFact(_fact:Fact) : Boolean
+		{
+			for each(var rule:Rule in ruleBase.GetRules())
+			{
+					if (rule.GetGoal() == _fact)
+					{
+						return false;
+					}
+			}
+			return true;
+		}
 	}
 
 }

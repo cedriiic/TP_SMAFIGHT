@@ -30,9 +30,9 @@ package com.GangnamTeam
 		
 		public function BotGangnam(_type:AgentType) 
 		{
-			super(_type);
-			
 			listeRessources = new Array ();
+			systemeExpertGangnam = new ExpertSystem ();
+			super(_type);
 		}
 		
 		override public function Update() : void

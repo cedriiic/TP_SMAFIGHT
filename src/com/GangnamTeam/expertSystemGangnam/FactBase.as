@@ -1,6 +1,5 @@
 ﻿package com.GangnamTeam.expertSystemGangnam 
 {
-	import com.novabox.expertSystem.Fact;
 	/**
 	 * Expert System 
 	 * 
@@ -14,33 +13,51 @@
 		
 		private var factValues:Array;
 		
-		public static const porteRessource 			= new Fact("porteRessource");
-		public static const nePortePasDeRessource 	= new Fact("nePortePasDeRessource");
+		public static const porteRessource:Fact 		= new Fact("porteRessource");
+		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
 		
-		public static const detecteRessource 		= new Fact("detecteRessource");
-		public static const detecteBotEnnemi 		= new Fact("detecteBotEnnemi");
-		public static const detecteBotAllie 		= new Fact("detecteBotAllie");
-		public static const detecteBaseEnnemie 		= new Fact("detecteBaseEnnemie");
-		public static const detecteBaseAlliee 		= new Fact("detecteBaseAlliee");
+		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
+		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
+		public static const detecteBotAllie:Fact 		= new Fact("detecteBotAllie");
+		public static const detecteBaseEnnemie:Fact 	= new Fact("detecteBaseEnnemie");
+		public static const detecteBaseAlliee:Fact 		= new Fact("detecteBaseAlliee");
 		
-		public static const collisionneRessource 	= new Fact("collisionneRessource");
-		public static const collisionneBotEnnemi 	= new Fact("collisionneBotEnnemi");
-		public static const collisionneBotAllie 	= new Fact("collisionneBotAllie");
-		public static const collisionneBaseEnnemie 	= new Fact("collisionneBaseEnnemie");
-		public static const collisionneBaseAlliee 	= new Fact("collisionneBaseAlliee");
+		public static const collisionneRessource:Fact 	= new Fact("collisionneRessource");
+		public static const collisionneBotEnnemi:Fact 	= new Fact("collisionneBotEnnemi");
+		public static const collisionneBotAllie:Fact 	= new Fact("collisionneBotAllie");
+		public static const collisionneBaseEnnemie:Fact	= new Fact("collisionneBaseEnnemie");
+		public static const collisionneBaseAlliee:Fact 	= new Fact("collisionneBaseAlliee");
 		
-		public static const aUnOrdre = new Fact("AUnOrdre");
-		public static const naPasDOrdre = new Fact("naPasDOrdre");
+		public static const aUnOrdre:Fact 				= new Fact("AUnOrdre");
+		public static const naPasDOrdre:Fact 			= new Fact("naPasDOrdre");
 		
-		public static const recupereInfosRessource = new Fact("RecupererInfosRessource");
-		public static const communiquerInfosRessource = new Fact("CommuniquerInfosRessource");
-		public static const recupereInfosBaseAlliee = new Fact("RecupereInfosBaseAlliee");
-		public static const recupereInfosBaseEnnemie = new Fact("RecupereInfosBaseEnnemie");
+		//public static const recupereInfosRessource = new Fact("RecupererInfosRessource");
+		//public static const communiquerInfosRessource = new Fact("CommuniquerInfosRessource");
+		//public static const recupereInfosBaseAlliee = new Fact("RecupereInfosBaseAlliee");
+		//public static const recupereInfosBaseEnnemie = new Fact("RecupereInfosBaseEnnemie");
 		
 		public function FactBase() 
 		{
 			facts = new Array();
 			factValues = new Array();
+			
+			AddFact(porteRessource);
+			AddFact(nePortePasDeRessource);
+			
+			AddFact(detecteRessource);
+			AddFact(detecteBotEnnemi);
+			AddFact(detecteBotAllie);
+			AddFact(detecteBaseEnnemie);
+			AddFact(detecteBaseAlliee);
+			
+			AddFact(collisionneRessource);
+			AddFact(collisionneBotEnnemi);
+			AddFact(collisionneBotAllie);
+			AddFact(collisionneBaseEnnemie);
+			AddFact(collisionneBaseAlliee);
+			
+			AddFact(aUnOrdre);
+			AddFact(naPasDOrdre);
 		}
 		
 		public function AddFact(_fact:Fact) : void

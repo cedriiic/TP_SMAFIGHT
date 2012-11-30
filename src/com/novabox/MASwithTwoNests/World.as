@@ -62,7 +62,7 @@
 																
 		
 		
-		public static const ALL_TEAMS:Array = new Array(DUMMY_TEAM1, DUMMY_TEAM2, GANGNAM_TEAM); 
+		public static const ALL_TEAMS:Array = new Array(DUMMY_TEAM1, GANGNAM_TEAM, DUMMY_TEAM2); 
 																
 		private var agents:Array;
 
