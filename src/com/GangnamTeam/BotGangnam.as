@@ -16,14 +16,14 @@ package com.GangnamTeam
 	{
 		private var systemeExpertGangnam:ExpertSystem;
 		
-		public static const poseRessource:int							= 1;
-		public static const prendRessource:int							= 2;
-		public static const vaChercherRessourcePlusPres:int				= 3;
-		public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
-		public static const vaExplorer:int								= 5;
-		public static const vaALaBaseAlliee:int							= 6;
-		public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
-		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
+		//public static const poseRessource:int							= 1;
+		//public static const prendRessource:int							= 2;
+		//public static const vaChercherRessourcePlusPres:int				= 3;
+		//public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
+		//public static const vaExplorer:int								= 5;
+		//public static const vaALaBaseAlliee:int							= 6;
+		//public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
+		//public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
 		
 		private var listeRessources:Array;
 	
