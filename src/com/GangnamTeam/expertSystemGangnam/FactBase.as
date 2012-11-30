@@ -26,6 +26,8 @@
 		public static const aUnOrdre = new Fact("AUnOrdre");
 		public static const naPasDOrdre = new Fact("naPasDOrdre");
 		
+		public static const recupereInfosRessource = new Fact("RecupererInfosRessource");
+		
 		public function FactBase() 
 		{
 			facts = new Array();
