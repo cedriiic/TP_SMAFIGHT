@@ -16,7 +16,7 @@
 		public static const porteRessource:Fact 		= new Fact("porteRessource");
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
 		public static const neConnaitPasDeRessource:Fact = new Fact("aucuneRessourceTrouvee");
-		public static const connaitDesRessources:Fact		= new Fact("connaitRessource");
+		public static const connaitDesRessources:Fact	= new Fact("connaitRessource");
 		
 		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
 		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
@@ -33,7 +33,7 @@
 		public static const aUnOrdre:Fact 				= new Fact("aUnOrdre");
 		public static const naPasDOrdre:Fact 			= new Fact("naPasDOrdre");
 		
-		public static const recupereInfosRessource:Fact 	= new Fact("recupererInfosRessource");
+		public static const recupererInfosRessource:Fact 	= new Fact("recupererInfosRessource");
 		public static const communiquerInfosRessource:Fact 	= new Fact("communiquerInfosRessource");
 		//public static const recupereInfosBaseAlliee:Fact 	= new Fact("recupereInfosBaseAlliee");
 		//public static const recupereInfosBaseEnnemie:Fact 	= new Fact("recupereInfosBaseEnnemie");
@@ -70,7 +70,7 @@
 			AddFact(aUnOrdre);
 			AddFact(naPasDOrdre);
 			
-			AddFact(recupereInfosRessource);
+			AddFact(recupererInfosRessource);
 			AddFact(communiquerInfosRessource);
 			
 			AddFact(poseRessource);
@@ -81,6 +81,9 @@
 			AddFact(vaALaBaseAlliee);
 			AddFact(vaALaBaseEnnemieLaPlusPres);
 			AddFact(vaALaBaseEnnemieAvecLePlusDeCapacite);
+			// ******************************************* FIN BASE DE FAITS *****************************************
+			
+			ResetFacts();
 		}
 		
 		public function AddFact(_fact:Fact) : void

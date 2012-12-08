@@ -19,9 +19,9 @@
 			AddRule(new Rule(FactBase.vaChercherRessourcePlusPres, new Array(FactBase.nePortePasDeRessource, FactBase.connaitDesRessources)));
 			
 			//Détection
-			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteRessource)));
-			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteBaseEnnemie)));
-			AddRule(new Rule(FactBase.recupereInfosRessource, new Array(FactBase.detecteBaseAlliee)));
+			AddRule(new Rule(FactBase.recupererInfosRessource, new Array(FactBase.detecteRessource)));
+			AddRule(new Rule(FactBase.recupererInfosRessource, new Array(FactBase.detecteBaseEnnemie)));
+			AddRule(new Rule(FactBase.recupererInfosRessource, new Array(FactBase.detecteBaseAlliee)));
 			
 			AddRule(new Rule(FactBase.communiquerInfosRessource, new Array(FactBase.detecteBotAllie)));
 			
