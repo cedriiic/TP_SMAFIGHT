@@ -2,6 +2,7 @@ package com.GangnamTeam
 {
 	import com.novabox.MASwithTwoNests.Agent;
 	import com.novabox.MASwithTwoNests.Resource;
+	import flash.geom.Point;
 	/**
 	 * ...
 	 * @author Charco
@@ -9,8 +10,7 @@ package com.GangnamTeam
 	public class Ressource 
 	{
 		private var temps:int;
-		private var positionX:int;
-		private var positionY:int;
+		private var position:Point;
 		private var capacite:int;
 		private var pointeurRessource:Agent;
 		private var type:int;
@@ -19,11 +19,10 @@ package com.GangnamTeam
 		public static const BASE_ENNEMIE:int = 2;
 		public static const RESSOURCE:int = 3;
 		
-		public function Ressource(_temps:int, _positionX:int, _positionY:int, _capacite:int, _pointeurRessource:Agent, _type:int) 
+		public function Ressource(_temps:int, _position:Point, _capacite:int, _pointeurRessource:Agent, _type:int) 
 		{
 			temps 				= _temps;
-			positionX 			= _positionX;
-			positionY 			= _positionY;
+			position 			= _position;
 			capacite 			= _capacite;
 			pointeurRessource 	= _pointeurRessource;
 			type 				= _type;
@@ -39,24 +38,14 @@ package com.GangnamTeam
 			temps = value;
 		}
 		
-		public function getPositionX():int 
+		public function getPosition():Point 
 		{
-			return positionX;
+			return position;
 		}
 		
-		public function setPositionX(value:int):void 
+		public function setPosition(value:Point):void 
 		{
-			positionX = value;
-		}
-		
-		public function getPositionY():int 
-		{
-			return positionY;
-		}
-		
-		public function setPositionY(value:int):void 
-		{
-			positionY = value;
+			position = value;
 		}
 		
 		public function getCapacite():int 
@@ -102,8 +91,7 @@ package com.GangnamTeam
 				{
 					this.temps 		= _autreRessource.getTemps();
 					this.capacite 	= _autreRessource.getCapacite();
-					this.positionX 	= _autreRessource.getPositionX();
-					this.positionY 	= _autreRessource.getPositionY();
+					this.position 	= _autreRessource.getPosition();
 				}
 			}
 		}

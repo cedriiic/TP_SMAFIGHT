@@ -15,7 +15,7 @@
 		
 		public static const porteRessource:Fact 		= new Fact("porteRessource");
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
-		public static const neConnaitPasDeRessource:Fact = new Fact("aucuneRessourceTrouvee");
+		public static const neConnaitPasDeRessource:Fact = new Fact("neConnaitPasDeRessource");
 		public static const connaitDesRessources:Fact	= new Fact("connaitRessource");
 		
 		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
@@ -54,6 +54,8 @@
 			
 			AddFact(porteRessource);
 			AddFact(nePortePasDeRessource);
+			AddFact(connaitDesRessources);
+			AddFact(neConnaitPasDeRessource);
 			
 			AddFact(detecteRessource);
 			AddFact(detecteBotEnnemi);
@@ -110,6 +112,8 @@
 			{
 				factValues[_fact.GetLabel()] = _value;
 			}
+			else
+				trace("CROTTE");
 		}
 		
 		public function GetFactValue(_fact:Fact) : Boolean

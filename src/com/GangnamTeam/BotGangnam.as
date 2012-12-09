@@ -1,6 +1,7 @@
 package com.GangnamTeam 
 {
 	import com.GangnamTeam.expertSystemGangnam.ExpertSystem;
+	import com.GangnamTeam.expertSystemGangnam.Fact;
 	import com.GangnamTeam.expertSystemGangnam.FactBase;
 	import com.novabox.MASwithTwoNests.AgentCollideEvent;
 	import com.novabox.MASwithTwoNests.AgentType;
@@ -10,6 +11,7 @@ package com.GangnamTeam
 	import com.novabox.MASwithTwoNests.Agent;
 	import com.novabox.MASwithTwoNests.TimeManager;
 	import com.novabox.MASwithTwoNests.World;
+	import flash.geom.Point;
 	
 	/**
 	 * ...
@@ -19,19 +21,13 @@ package com.GangnamTeam
 	{
 		private var systemeExpertGangnam:ExpertSystem;
 		
-		//public static const poseRessource:int							= 1;
-		//public static const prendRessource:int							= 2;
-		//public static const vaChercherRessourcePlusPres:int				= 3;
-		//public static const vaChercherRessourceAvecLePlusDeCapacite:int	= 4;
-		//public static const vaExplorer:int								= 5;
-		//public static const vaALaBaseAlliee:int							= 6;
-		//public static const vaALaBaseEnnemieLaPlusPres:int				= 7;
-		//public static const vaALaBaseEnnemieAvecLePlusDeCapacite:int	= 8;
-
+		
+		
 		
 		private var listeRessources:Array;
 		
-		private var agentActuel:Agent;
+		private var agentCollided:Agent;
+		private var agentPercepted:Agent;
 	
 		protected var updateTime:Number;
 		
@@ -62,10 +58,20 @@ package com.GangnamTeam
 			
 			// appel fonctions qui set les faits
 			setFactConnaitRessources ();
+			setFactPorteRessource ();
+		}
+		
+		private function setFactPorteRessource():void
+		{
+			if (HasResource())
+				systemeExpertGangnam.SetFactValue(FactBase.porteRessource, true);
+			else
+				systemeExpertGangnam.SetFactValue(FactBase.nePortePasDeRessource, true);
 		}
 		
 		private function setFactConnaitRessources () : void
 		{
+			//trace (isRessourcesConnuesDisponibles());
 			if (isRessourcesConnuesDisponibles())
 				systemeExpertGangnam.SetFactValue(FactBase.connaitDesRessources, true);
 			else
@@ -90,6 +96,7 @@ package com.GangnamTeam
 		
 		private function setFactCollision(_collidedAgent:Agent):void 
 		{
+			agentCollided = _collidedAgent;
 			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneRessource, true);
 			if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
@@ -110,6 +117,7 @@ package com.GangnamTeam
 		
 		private function setFactPerception(_collidedAgent:Agent):void 
 		{
+			agentPercepted = _collidedAgent;
 			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
 			if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
@@ -136,12 +144,21 @@ package com.GangnamTeam
 		public function Analyse() : void {
 
 			systemeExpertGangnam.InferForward();
-			var inferedFacts:Array = systemeExpertGangnam.GetInferedFacts();
-			//trace("Infered Facts:");
+			
+			//var inferedFacts:Array = systemeExpertGangnam.GetInferedFacts();
+			//for each(var inferedFact:Fact in inferedFacts)
+			//{
+				//trace("        Infered Facts:" + inferedFact.GetLabel());
+			//}
 
 			systemeExpertGangnam.InferBackward();
-			var factsToAsk:Array = systemeExpertGangnam.GetFactsToAsk();
+			
+			//var factsToAsk:Array = systemeExpertGangnam.GetFactsToAsk();
 			//trace("Facts to ask :");
+			//for each(var factToAsk:Fact in factsToAsk)
+			//{
+				//trace(factToAsk.GetLabel());
+			//}
 		}
 		
 		
@@ -162,28 +179,26 @@ package com.GangnamTeam
 				//(normalement cette confrontation de regles est impossible, simple sécurité) 
 				indice = tabFaitsFinaux.length - 1;
 
-				
-			trace(tabFaitsFinaux.length);
 			if (tabFaitsFinaux [indice] == FactBase.vaExplorer) 	
 				Explorer();
 			else if (tabFaitsFinaux [indice] == FactBase.communiquerInfosRessource)
-				communiqueInformations(agentActuel);
+				communiqueInformations(agentPercepted);
 			else if (tabFaitsFinaux [indice] == FactBase.recupererInfosRessource)
-				recupereInformations(agentActuel);
+				recupereInformations(agentPercepted);
 			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
-				PoseRessource(agentActuel);
+				PoseRessource(agentCollided);
 			else if (tabFaitsFinaux [indice] == FactBase.prendRessource)
-				PrendRessource(agentActuel);
+				PrendRessource(agentCollided);
 			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourcePlusPres)
-				PrendRessource(agentActuel);
+				seDirigeVersLaRessourcePlusPres();
 			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
-				PrendRessource(agentActuel);
+				seDirigeVersLaRessourceAvecLePlusDeCapacite();
 			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseAlliee)
-				PrendRessource(agentActuel);
+				seDirigeVersLaBaseAlliee();
 			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseEnnemieLaPlusPres)
-				PrendRessource(agentActuel);
+				seDirigeVersLaBaseEnnemieLaPlusPres();
 			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseEnnemieAvecLePlusDeCapacite)
-				PrendRessource(agentActuel);
+				seDirigeVersLaBaseEnnemieAvecLePlusDeCapacite();
 				
 			//else if ()
 			
@@ -197,6 +212,22 @@ package com.GangnamTeam
 				//Fold ();
 		}
 		
+		public function Explorer () : void
+		{
+			var elapsedTime:Number = TimeManager.timeManager.GetFrameDeltaTime();
+			
+			updateTime += elapsedTime;
+				
+			if (updateTime >=  directionChangeDelay)
+			{
+				ChangeDirection();
+				updateTime = 0;
+			}
+			
+			
+			 targetPoint.x = x + direction.x * speed * elapsedTime / 1000;
+			 targetPoint.y = y + direction.y * speed * elapsedTime / 1000;
+		}
 		
 		public function communiqueInformations (_agent:Agent) : void
 		{
@@ -206,20 +237,6 @@ package com.GangnamTeam
 		public function recupereInformations (_agent:Agent) : void
 		{
 			//TODO
-		}
-		
-		public function PrendRessource (_collidedAgent:Agent) : void
-		{
-			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
-			{
-				(_collidedAgent as Resource).DecreaseLife();
-				SetResource(true);
-			}
-			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
-			{
-				(_collidedAgent as BotHome).TakeResource();
-				SetResource(true);
-			}
 		}
 		
 		public function PoseRessource (_collidedAgent:Agent) : void
@@ -236,21 +253,48 @@ package com.GangnamTeam
 			}
 		}
 		
-		public function Explorer () : void
+		public function PrendRessource (_collidedAgent:Agent) : void
 		{
-			var elapsedTime:Number = TimeManager.timeManager.GetFrameDeltaTime();
-			
-			updateTime += elapsedTime;
-				
-			if (updateTime >=  directionChangeDelay)
+			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
 			{
-				ChangeDirection();
-				updateTime = 0;
+				(_collidedAgent as Resource).DecreaseLife();
+				SetResource(true);
 			}
-			
-			
-			 targetPoint.x = x + direction.x * speed * elapsedTime / 1000 ;
-			 targetPoint.y = y + direction.y * speed * elapsedTime / 1000;
+			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
+			{
+				(_collidedAgent as BotHome).TakeResource();
+				SetResource(true);
+			}
+		}
+		
+		public function seDirigeVersLaRessourcePlusPres () : void
+		{
+			//TODO
+			//seDirigeVers(positionAgent);
+		}
+		
+		public function seDirigeVersLaRessourceAvecLePlusDeCapacite () : void
+		{
+			//TODO
+			//seDirigeVers(positionAgent);
+		}
+		
+		public function seDirigeVersLaBaseAlliee () : void
+		{
+			//TODO
+			//seDirigeVers(positionAgent);
+		}
+		
+		public function seDirigeVersLaBaseEnnemieLaPlusPres () : void
+		{
+			//TODO
+			//seDirigeVers(positionAgent);
+		}
+		
+		public function seDirigeVersLaBaseEnnemieAvecLePlusDeCapacite () : void
+		{
+			//TODO
+			//seDirigeVers(positionAgent);
 		}
 		
 		
@@ -258,6 +302,13 @@ package com.GangnamTeam
 		/* ############################################## FONCTIONS ANNEXES ############################### */
 		/* ################################################################################################ */
 		
+		// TODO : vérifier que la fonction se comporte comme elle devrait ! (appel du Move ...)
+		public function seDirigeVers(_positionAgent:Point) : void
+		{
+			direction = _positionAgent;
+			
+			Move();
+		}
 		
 		public function isRessourcesConnuesDisponibles () : Boolean
 		{
