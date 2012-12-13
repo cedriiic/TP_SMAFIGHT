@@ -9,7 +9,7 @@ package com.GangnamTeam
 	 */
 	public class Ressource 
 	{
-		private var temps:int;
+		private var temps:Number;
 		private var position:Point;
 		private var capacite:int;
 		private var pointeurRessource:Agent;
@@ -19,7 +19,8 @@ package com.GangnamTeam
 		public static const BASE_ENNEMIE:int = 2;
 		public static const RESSOURCE:int = 3;
 		
-		public function Ressource(_temps:int, _position:Point, _capacite:int, _pointeurRessource:Agent, _type:int) 
+		
+		public function Ressource(_temps:Number, _position:Point, _capacite:int, _pointeurRessource:Agent, _type:int) 
 		{
 			temps 				= _temps;
 			position 			= _position;
@@ -28,12 +29,12 @@ package com.GangnamTeam
 			type 				= _type;
 		}
 		
-		public function getTemps():int 
+		public function getTemps():Number 
 		{
 			return temps;
 		}
 		
-		public function setTemps(value:int):void 
+		public function setTemps(value:Number):void 
 		{
 			temps = value;
 		}

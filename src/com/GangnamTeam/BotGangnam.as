@@ -120,14 +120,14 @@ package com.GangnamTeam
 			agentPercepted = _collidedAgent;
 			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
-			if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
+			else if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
 			{
 				if (isBaseAlliee(_collidedAgent as BotHome))
 					systemeExpertGangnam.SetFactValue(FactBase.detecteBaseAlliee, true);
 				else if (!isBaseAlliee(_collidedAgent as BotHome))
 					systemeExpertGangnam.SetFactValue(FactBase.detecteBaseEnnemie, true);
 			}
-			if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
+			else if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
 			{
 				if (isBotAllie(_collidedAgent as Bot))
 					systemeExpertGangnam.SetFactValue(FactBase.detecteBotAllie, true);
@@ -171,7 +171,7 @@ package com.GangnamTeam
 			// Recupere le ou les faits finaux (normalement un seul)
 			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
 			var indice:int;
-			
+			//trace("tableFait taille : " + tabFaitsFinaux.length + " indice : " + (tabFaitsFinaux[0] as Fact).GetLabel());
 			if (tabFaitsFinaux.length == 1)
 				indice = 0;
 			else
@@ -184,11 +184,20 @@ package com.GangnamTeam
 			else if (tabFaitsFinaux [indice] == FactBase.communiquerInfosRessource)
 				communiqueInformations(agentPercepted);
 			else if (tabFaitsFinaux [indice] == FactBase.recupererInfosRessource)
-				recupereInformations(agentPercepted);
+			{
+				recupereInformationsRessource(agentPercepted);
+				trace("recupereInformationsRessource : lengh = " + listeRessources.length);
+			}
 			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
+			{
+				trace("PoseRessource");
 				PoseRessource(agentCollided);
+			}
 			else if (tabFaitsFinaux [indice] == FactBase.prendRessource)
+			{
+				trace("PrendRessource");
 				PrendRessource(agentCollided);
+			}
 			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourcePlusPres)
 				seDirigeVersLaRessourcePlusPres();
 			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
@@ -234,9 +243,18 @@ package com.GangnamTeam
 			//TODO
 		}
 		
-		public function recupereInformations (_agent:Agent) : void
+		public function recupereInformationsRessource (_agent:Agent) : void
 		{
-			//TODO
+			//TODO : tester fonction
+			var maRessource:Ressource = getRessourceByPointeur(_agent);
+			if (maRessource != null)
+			{
+				modifieRessource(maRessource, _agent);
+			}
+			else
+			{	
+				ajouteNouvelleRessource(_agent);
+			}
 		}
 		
 		public function PoseRessource (_collidedAgent:Agent) : void
@@ -302,6 +320,53 @@ package com.GangnamTeam
 		/* ############################################## FONCTIONS ANNEXES ############################### */
 		/* ################################################################################################ */
 		
+		public function ajouteNouvelleRessource(_agent:Agent):void 
+		{
+			var type:int;
+			var pointeur:Agent;
+			var position:Point;
+			var temps:Number;
+			var capacite:int;
+			
+			type = getTypeDe(_agent);
+			pointeur = _agent;
+			position = _agent.GetTargetPoint();
+			temps = TimeManager.timeManager.GetFrameDeltaTime();
+			capacite = getCapaciteDe(_agent);
+			
+			listeRessources.push(new Ressource(temps, position, capacite, pointeur, type));
+		}
+		
+		public function modifieRessource(_ressource:Ressource, _agent:Agent):void 
+		{
+			_ressource.setPosition(_agent.GetTargetPoint());
+			_ressource.setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+			_ressource.setCapacite(getCapaciteDe(_agent));
+		}
+		
+		public function getTypeDe(_agent:Agent):int 
+		{
+			if (_agent.GetType () == AgentType.AGENT_RESOURCE)
+				return Ressource.RESSOURCE;
+			else if (_agent.GetType () == AgentType.AGENT_BOT_HOME)
+			{
+				if (isBaseAlliee((_agent as BotHome)))
+					return Ressource.BASE_ALLIEE;
+				else
+					return Ressource.BASE_ENNEMIE;
+			}
+			return 0;
+		}
+		
+		public function getCapaciteDe(_agent:Agent):int 
+		{
+			if (_agent.GetType () == AgentType.AGENT_RESOURCE)
+				return (_agent as Resource).GetLife();
+			else if (_agent.GetType () == AgentType.AGENT_BOT_HOME)
+				return (_agent as BotHome).GetResourceCount();
+			return 0;
+		}
+		
 		// TODO : vérifier que la fonction se comporte comme elle devrait ! (appel du Move ...)
 		public function seDirigeVers(_positionAgent:Point) : void
 		{
@@ -309,6 +374,17 @@ package com.GangnamTeam
 			
 			Move();
 		}
+		
+		// TODO : a verifier fonctionnement
+		//public function isRessourceConnue (_pointeurAgent:Agent) : Boolean
+		//{
+			//for each (var ressource:Ressource in listeRessources)
+			//{
+				//if (ressource.getPointeurRessource() == _pointeurAgent)
+					//return true;
+			//}
+			//return false;
+		//}
 		
 		public function isRessourcesConnuesDisponibles () : Boolean
 		{
@@ -332,11 +408,11 @@ package com.GangnamTeam
 		}
 		
 		
-		public function getRessourceByPointeur (_maRessource:Ressource) : Ressource
+		public function getRessourceByPointeur (_agent:Agent) : Ressource
 		{
 			for each (var ressource:Ressource in listeRessources)
 			{
-				if (_maRessource.getPointeurRessource() == ressource.getPointeurRessource())
+				if (_agent == ressource.getPointeurRessource())
 					return ressource;
 			}
 			return null;
