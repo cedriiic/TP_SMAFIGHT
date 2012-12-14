@@ -235,35 +235,38 @@ package com.GangnamTeam
 			if (tabFaitsFinaux.length > 0)
 				trace("fait choisi : " + (tabFaitsFinaux[indice] as Fact).GetLabel());
 			trace("#########################################");
-			if (tabFaitsFinaux [indice] == FactBase.vaExplorer) 	
+			for each(var fait:Fact in tabFaitsFinaux)
+			{
+				if (fait == FactBase.vaExplorer) 	
 				Explorer();
-			else if (tabFaitsFinaux [indice] == FactBase.communiquerInfosRessource)
+			else if (fait == FactBase.communiquerInfosRessource)
 				communiqueInformations();
-			else if (tabFaitsFinaux [indice] == FactBase.recupererInfosRessource)
+			else if (fait == FactBase.recupererInfosRessource)
 			{
 				recupereInformationsRessource();
 				trace("recupereInformationsRessource");
 			}
-			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
+			else if (fait == FactBase.poseRessource)
 			{
 				trace("PoseRessource");
 				PoseRessource();
 			}
-			else if (tabFaitsFinaux [indice] == FactBase.prendRessource)
+			else if (fait == FactBase.prendRessource)
 			{
 				trace("PrendRessource");
 				PrendRessource();
 			}
-			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourcePlusPres)
+			else if (fait == FactBase.vaChercherRessourcePlusPres)
 				seDirigeVersLaRessourcePlusPres();
-			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
+			else if (fait == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
 				seDirigeVersLaRessourceAvecLePlusDeCapacite();
-			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseAlliee)
+			else if (fait == FactBase.vaALaBaseAlliee)
 				seDirigeVersLaBaseAlliee();
-			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseEnnemieLaPlusPres)
+			else if (fait == FactBase.vaALaBaseEnnemieLaPlusPres)
 				seDirigeVersLaBaseEnnemieLaPlusPres();
-			else if (tabFaitsFinaux [indice] == FactBase.vaALaBaseEnnemieAvecLePlusDeCapacite)
+			else if (fait == FactBase.vaALaBaseEnnemieAvecLePlusDeCapacite)
 				seDirigeVersLaBaseEnnemieAvecLePlusDeCapacite();
+			}
 				
 			//else if ()
 			
