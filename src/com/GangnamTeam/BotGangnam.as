@@ -220,52 +220,54 @@ package com.GangnamTeam
 			// Recupere le ou les faits finaux (normalement un seul)
 			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
 			var indice:int;
+			
 			trace("tableFaitsFinaux taille : " + tabFaitsFinaux.length);
 			for each (var fait:Fact in tabFaitsFinaux)
 			{
 				trace ("fait : " + fait.GetLabel());
 			}
 			
-			if (tabFaitsFinaux.length == 1)
-				indice = 0;
-			else
+			//if (tabFaitsFinaux.length == 1)
+				//indice = 0;
+			//else
 				// Comme la table de regle va de check/Fold à Raise, on prend la dernier indice, ce qui permet de choisir de suivre meme si une regle check/fold est vraie 
 				//(normalement cette confrontation de regles est impossible, simple sécurité) 
-				indice = tabFaitsFinaux.length - 1;
+				//indice = tabFaitsFinaux.length - 1;
+			
 			if (tabFaitsFinaux.length > 0)
 				trace("fait choisi : " + (tabFaitsFinaux[indice] as Fact).GetLabel());
 			trace("#########################################");
-			for each(var fait:Fact in tabFaitsFinaux)
+			for each(var faitFinal:Fact in tabFaitsFinaux)
 			{
-				if (fait == FactBase.vaExplorer) 	
-				Explorer();
-			else if (fait == FactBase.communiquerInfosRessource)
-				communiqueInformations();
-			else if (fait == FactBase.recupererInfosRessource)
-			{
-				recupereInformationsRessource();
-				trace("recupereInformationsRessource");
-			}
-			else if (fait == FactBase.poseRessource)
-			{
-				trace("PoseRessource");
-				PoseRessource();
-			}
-			else if (fait == FactBase.prendRessource)
-			{
-				trace("PrendRessource");
-				PrendRessource();
-			}
-			else if (fait == FactBase.vaChercherRessourcePlusPres)
-				seDirigeVersLaRessourcePlusPres();
-			else if (fait == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
-				seDirigeVersLaRessourceAvecLePlusDeCapacite();
-			else if (fait == FactBase.vaALaBaseAlliee)
-				seDirigeVersLaBaseAlliee();
-			else if (fait == FactBase.vaALaBaseEnnemieLaPlusPres)
-				seDirigeVersLaBaseEnnemieLaPlusPres();
-			else if (fait == FactBase.vaALaBaseEnnemieAvecLePlusDeCapacite)
-				seDirigeVersLaBaseEnnemieAvecLePlusDeCapacite();
+				if (faitFinal == FactBase.vaExplorer) 	
+					Explorer();
+				else if (faitFinal == FactBase.communiquerInfosRessource)
+					communiqueInformations();
+				else if (faitFinal == FactBase.recupererInfosRessource)
+				{
+					recupereInformationsRessource();
+					trace("recupereInformationsRessource");
+				}
+				else if (faitFinal == FactBase.poseRessource)
+				{
+					trace("PoseRessource");
+					PoseRessource();
+				}
+				else if (faitFinal == FactBase.prendRessource)
+				{
+					trace("PrendRessource");
+					PrendRessource();
+				}
+				else if (faitFinal == FactBase.vaChercherRessourcePlusPres)
+					seDirigeVersLaRessourcePlusPres();
+				else if (faitFinal == FactBase.vaChercherRessourceAvecLePlusDeCapacite)
+					seDirigeVersLaRessourceAvecLePlusDeCapacite();
+				else if (faitFinal == FactBase.vaALaBaseAlliee)
+					seDirigeVersLaBaseAlliee();
+				else if (faitFinal == FactBase.vaALaBaseEnnemieLaPlusPres)
+					seDirigeVersLaBaseEnnemieLaPlusPres();
+				else if (faitFinal == FactBase.vaALaBaseEnnemieAvecLePlusDeCapacite)
+					seDirigeVersLaBaseEnnemieAvecLePlusDeCapacite();
 			}
 				
 			//else if ()
@@ -354,13 +356,27 @@ package com.GangnamTeam
 				{
 					if (agent.GetType () == AgentType.AGENT_RESOURCE)
 					{
-						(agent as Resource).DecreaseLife();
-						SetResource(true);
+						if ((agent as Resource).GetLife() > 0)
+						{
+							(agent as Resource).DecreaseLife();
+							SetResource(true);
+						}
 					}
 					else if (agent.GetType() == AgentType.AGENT_BOT_HOME)
 					{
-						(agent as BotHome).TakeResource();
-						SetResource(true);
+						if ((agent as BotHome).GetResourceCount() > 0)
+						{						
+							(agent as BotHome).TakeResource();
+							SetResource(true);	
+						}
+					}
+					else if (agent.GetType() == AgentType.AGENT_BOT)
+					{
+						if ((agent as Bot).HasResource())
+						{						
+							(agent as Bot).SetResource(false);
+							SetResource(true);	
+						}
 					}
 				}
 				indice++;
