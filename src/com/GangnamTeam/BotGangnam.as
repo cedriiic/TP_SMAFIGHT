@@ -22,13 +22,22 @@ package com.GangnamTeam
 		private var systemeExpertGangnam:ExpertSystem;
 		
 		
-		
+		private static const RESSOURCE:int = 1;
+		private static const BOT_ALLIE:int = 2;
+		private static const BOT_ENNEMI:int = 3;
+		private static const BASE_ALLIE:int = 4;
+		private static const BASE_ENNEMIE:int = 5;
 		
 		private var listeRessources:Array;
 		
 		private var agentCollided:Agent;
+		private var isCollided:Boolean;
+		
 		private var agentPercepted:Agent;
+		private var isPercepted:Boolean;
 	
+		private var typeAgent:int;
+		
 		protected var updateTime:Number;
 		
 		public function BotGangnam(_type:AgentType) 
@@ -36,6 +45,9 @@ package com.GangnamTeam
 			listeRessources = new Array ();
 			systemeExpertGangnam = new ExpertSystem ();
 			updateTime = 0;
+			typeAgent = 0;
+			isCollided = false;
+			isPercepted = false;
 			super(_type);
 		}
 		
@@ -44,6 +56,7 @@ package com.GangnamTeam
 			Perception();
 			Analyse();
 			Action();
+			Reinit();
 		}
 		
 		
@@ -57,14 +70,31 @@ package com.GangnamTeam
 			systemeExpertGangnam.ResetFacts();
 			
 			// appel fonctions qui set les faits
+			setFactCollisionPerception ();
 			setFactConnaitRessources ();
 			setFactPorteRessource ();
+		}
+		
+		private function setFactCollisionPerception ():void
+		{
+			if (isCollided) 
+			{
+				setFactCollision();
+			}
+			// Perception
+			else if (isPercepted)
+			{
+				setFactPerception();
+			}
 		}
 		
 		private function setFactPorteRessource():void
 		{
 			if (HasResource())
+			{
+				trace("porte ressource");
 				systemeExpertGangnam.SetFactValue(FactBase.porteRessource, true);
+			}
 			else
 				systemeExpertGangnam.SetFactValue(FactBase.nePortePasDeRessource, true);
 		}
@@ -78,62 +108,72 @@ package com.GangnamTeam
 				systemeExpertGangnam.SetFactValue(FactBase.neConnaitPasDeRessource, true);
 		}
 		
+		private function setFactCollision():void
+		{
+			if (typeAgent == RESSOURCE)
+				systemeExpertGangnam.SetFactValue(FactBase.collisionneRessource, true);
+			else if (typeAgent == BASE_ALLIE)
+				systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseAlliee, true);
+			else if (typeAgent == BASE_ENNEMIE)
+				systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseEnnemie, true);
+			else if (typeAgent == BOT_ALLIE)
+				systemeExpertGangnam.SetFactValue(FactBase.collisionneBotAllie, true);
+			else if (typeAgent == BOT_ENNEMI)
+				systemeExpertGangnam.SetFactValue(FactBase.collisionneBotEnnemi, true);
+			else
+				trace ("setFactCollision : typeAgent incorrect");
+		}
+		
+		private function setFactPerception():void 
+		{
+			if (typeAgent == RESSOURCE)
+				systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
+			else if (typeAgent == BASE_ALLIE)
+				systemeExpertGangnam.SetFactValue(FactBase.detecteBaseAlliee, true);
+			else if (typeAgent == BASE_ENNEMIE)
+				systemeExpertGangnam.SetFactValue(FactBase.detecteBaseEnnemie, true);
+			else if (typeAgent == BOT_ALLIE)
+				systemeExpertGangnam.SetFactValue(FactBase.detecteBotAllie, true);
+			else if (typeAgent == BOT_ENNEMI)
+				systemeExpertGangnam.SetFactValue(FactBase.detecteBotEnnemi, true);
+			else
+				trace ("setFactPerception : typeAgent incorrect");
+		}
+		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
 		{
 			var agentActuel:Agent = _event.GetAgent();
 			
 			// Collision 
-			if (IsCollided(agentActuel)) {
-				setFactCollision(agentActuel);
+			if (IsCollided(agentActuel)) 
+			{
+				agentCollided = agentActuel;
+				isCollided = true;
 			}
 			// Perception
 			else
 			{
-				setFactPerception(agentActuel);
+				agentPercepted = agentActuel;
+				isPercepted = true;
 			}
+			if (agentActuel.GetType () == AgentType.AGENT_RESOURCE)
+				typeAgent = RESSOURCE;
+			else if (agentActuel.GetType () == AgentType.AGENT_BOT_HOME)
+			{
+				if (isBaseAlliee(agentActuel as BotHome))
+					typeAgent = BASE_ALLIE;
+				else if (!isBaseAlliee(agentActuel as BotHome))
+					typeAgent = BASE_ENNEMIE;
+			}
+			else //if (agentActuel.GetType () == AgentType.AGENT_BOT)
+			{
+				if (isBotAllie(agentActuel as Bot))
+					typeAgent = BOT_ALLIE;
+				else if (!isBotAllie(agentActuel as Bot))
+					typeAgent = BOT_ENNEMI;
+			}
+			//trace ("probleme typeAgent : " + typeAgent);
 			//if (!HasResource())
-		}
-		
-		private function setFactCollision(_collidedAgent:Agent):void 
-		{
-			agentCollided = _collidedAgent;
-			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
-				systemeExpertGangnam.SetFactValue(FactBase.collisionneRessource, true);
-			if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
-			{
-				if (isBaseAlliee(_collidedAgent as BotHome))
-					systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseAlliee, true);
-				else if (!isBaseAlliee(_collidedAgent as BotHome))
-					systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseEnnemie, true);
-			}
-			if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
-			{
-				if (isBotAllie(_collidedAgent as Bot))
-					systemeExpertGangnam.SetFactValue(FactBase.collisionneBotAllie, true);
-				else if (!isBotAllie(_collidedAgent as Bot))
-					systemeExpertGangnam.SetFactValue(FactBase.collisionneBotEnnemi, true);
-			}
-		}
-		
-		private function setFactPerception(_collidedAgent:Agent):void 
-		{
-			agentPercepted = _collidedAgent;
-			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
-				systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
-			else if (_collidedAgent.GetType () == AgentType.AGENT_BOT_HOME)
-			{
-				if (isBaseAlliee(_collidedAgent as BotHome))
-					systemeExpertGangnam.SetFactValue(FactBase.detecteBaseAlliee, true);
-				else if (!isBaseAlliee(_collidedAgent as BotHome))
-					systemeExpertGangnam.SetFactValue(FactBase.detecteBaseEnnemie, true);
-			}
-			else if (_collidedAgent.GetType () == AgentType.AGENT_BOT)
-			{
-				if (isBotAllie(_collidedAgent as Bot))
-					systemeExpertGangnam.SetFactValue(FactBase.detecteBotAllie, true);
-				else if (!isBotAllie(_collidedAgent as Bot))
-					systemeExpertGangnam.SetFactValue(FactBase.detecteBotEnnemi, true);
-			}
 		}
 		
 		/* ################################################################################################ */
@@ -151,7 +191,7 @@ package com.GangnamTeam
 				//trace("        Infered Facts:" + inferedFact.GetLabel());
 			//}
 
-			systemeExpertGangnam.InferBackward();
+			//systemeExpertGangnam.InferBackward();
 			
 			//var factsToAsk:Array = systemeExpertGangnam.GetFactsToAsk();
 			//trace("Facts to ask :");
@@ -171,14 +211,21 @@ package com.GangnamTeam
 			// Recupere le ou les faits finaux (normalement un seul)
 			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
 			var indice:int;
-			//trace("tableFait taille : " + tabFaitsFinaux.length + " indice : " + (tabFaitsFinaux[0] as Fact).GetLabel());
+			trace("tableFaitsFinaux taille : " + tabFaitsFinaux.length);
+			for each (var fait:Fact in tabFaitsFinaux)
+			{
+				trace ("fait : " + fait.GetLabel());
+			}
+			
 			if (tabFaitsFinaux.length == 1)
 				indice = 0;
 			else
 				// Comme la table de regle va de check/Fold à Raise, on prend la dernier indice, ce qui permet de choisir de suivre meme si une regle check/fold est vraie 
 				//(normalement cette confrontation de regles est impossible, simple sécurité) 
 				indice = tabFaitsFinaux.length - 1;
-
+			if (tabFaitsFinaux.length > 0)
+				trace("fait choisi : " + (tabFaitsFinaux[indice] as Fact).GetLabel());
+			trace("#########################################");
 			if (tabFaitsFinaux [indice] == FactBase.vaExplorer) 	
 				Explorer();
 			else if (tabFaitsFinaux [indice] == FactBase.communiquerInfosRessource)
@@ -186,7 +233,7 @@ package com.GangnamTeam
 			else if (tabFaitsFinaux [indice] == FactBase.recupererInfosRessource)
 			{
 				recupereInformationsRessource(agentPercepted);
-				trace("recupereInformationsRessource : lengh = " + listeRessources.length);
+				trace("recupereInformationsRessource");
 			}
 			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
 			{
@@ -418,7 +465,11 @@ package com.GangnamTeam
 			return null;
 		}
 		
-		
+		public function Reinit ():void
+		{
+			isCollided = false;
+			isPercepted = false;
+		}
 	}
 
 }

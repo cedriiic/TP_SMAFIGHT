@@ -11,7 +11,7 @@
 		
 		private var facts:Array;
 		
-		private var factValues:Array;
+		public var factValues:Array;
 		
 		public static const porteRessource:Fact 		= new Fact("porteRessource");
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
@@ -112,8 +112,6 @@
 			{
 				factValues[_fact.GetLabel()] = _value;
 			}
-			else
-				trace("CROTTE");
 		}
 		
 		public function GetFactValue(_fact:Fact) : Boolean

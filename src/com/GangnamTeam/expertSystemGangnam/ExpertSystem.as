@@ -119,7 +119,7 @@
 				factBase.SetFactValue(goal, true);
 				inferedFacts.push(goal);
 				
-				//TraceRule(validRule);
+				TraceRule(validRule);
 				
 				validRule = GetValidRule();
 			}
