@@ -35,6 +35,9 @@
 			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource)));
 			
 			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource)));
+			
+			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource, FactBase.connaitBase)));
+			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.porteRessource, FactBase.neConnaitPasBase)));
 		}
 		
 		public function AddRule(_rule:Rule) : void

@@ -17,6 +17,8 @@
 		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
 		public static const neConnaitPasDeRessource:Fact = new Fact("neConnaitPasDeRessource");
 		public static const connaitDesRessources:Fact	= new Fact("connaitRessource");
+		public static const connaitBase:Fact			= new Fact("connaitBase");
+		public static const neConnaitPasBase:Fact			= new Fact("neConnaitPasBase");
 		
 		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
 		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
