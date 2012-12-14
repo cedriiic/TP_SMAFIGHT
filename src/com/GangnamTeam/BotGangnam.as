@@ -85,7 +85,7 @@ package com.GangnamTeam
 					setFactCollision(listeAgentCollidedType[indice]);
 				}
 				// Perception
-				else if (listeAgentCollidedOrPercepted[indice] == IS_COLLIDED)
+				else if (listeAgentCollidedOrPercepted[indice] == IS_PERCEPTED)
 				{
 					setFactPerception(listeAgentCollidedType[indice]);
 				}
