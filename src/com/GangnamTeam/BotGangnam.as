@@ -22,32 +22,32 @@ package com.GangnamTeam
 		private var systemeExpertGangnam:ExpertSystem;
 		
 		
-		private static const RESSOURCE:int = 1;
-		private static const BOT_ALLIE:int = 2;
-		private static const BOT_ENNEMI:int = 3;
-		private static const BASE_ALLIE:int = 4;
-		private static const BASE_ENNEMIE:int = 5;
+		private static const RESSOURCE:int 		= 1;
+		private static const BOT_ALLIE:int 		= 2;
+		private static const BOT_ENNEMI:int 	= 3;
+		private static const BASE_ALLIE:int 	= 4;
+		private static const BASE_ENNEMIE:int 	= 5;
+		
+		private static const IS_PERCEPTED:int 	= 10;
+		private static const IS_COLLIDED:int 	= 11;
+		
 		
 		private var listeRessources:Array;
 		
-		private var agentCollided:Agent;
-		private var isCollided:Boolean;
-		
-		private var agentPercepted:Agent;
-		private var isPercepted:Boolean;
-	
-		private var typeAgent:int;
+		private var listeAgentCollided:Array;
+		private var listeAgentCollidedOrPercepted:Array;
+		private var listeAgentCollidedType:Array;
 		
 		protected var updateTime:Number;
 		
 		public function BotGangnam(_type:AgentType) 
 		{
-			listeRessources = new Array ();
-			systemeExpertGangnam = new ExpertSystem ();
-			updateTime = 0;
-			typeAgent = 0;
-			isCollided = false;
-			isPercepted = false;
+			listeRessources 				= new Array ();
+			systemeExpertGangnam 			= new ExpertSystem ();
+			listeAgentCollided 				= new Array ();
+			listeAgentCollidedOrPercepted 	= new Array ();
+			listeAgentCollidedType			= new Array ();
+			updateTime 	= 0;
 			super(_type);
 		}
 		
@@ -77,14 +77,19 @@ package com.GangnamTeam
 		
 		private function setFactCollisionPerception ():void
 		{
-			if (isCollided) 
+			var indice:int = 0;
+			for each (var agent:Agent in listeAgentCollided)
 			{
-				setFactCollision();
-			}
-			// Perception
-			else if (isPercepted)
-			{
-				setFactPerception();
+				if (listeAgentCollidedOrPercepted[indice] == IS_COLLIDED) 
+				{
+					setFactCollision(listeAgentCollidedType[indice]);
+				}
+				// Perception
+				else if (listeAgentCollidedOrPercepted[indice] == IS_COLLIDED)
+				{
+					setFactPerception(listeAgentCollidedType[indice]);
+				}
+				indice++;
 			}
 		}
 		
@@ -108,33 +113,33 @@ package com.GangnamTeam
 				systemeExpertGangnam.SetFactValue(FactBase.neConnaitPasDeRessource, true);
 		}
 		
-		private function setFactCollision():void
+		private function setFactCollision(_typeAgent:int):void
 		{
-			if (typeAgent == RESSOURCE)
+			if (_typeAgent == RESSOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneRessource, true);
-			else if (typeAgent == BASE_ALLIE)
+			else if (_typeAgent == BASE_ALLIE)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseAlliee, true);
-			else if (typeAgent == BASE_ENNEMIE)
+			else if (_typeAgent == BASE_ENNEMIE)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneBaseEnnemie, true);
-			else if (typeAgent == BOT_ALLIE)
+			else if (_typeAgent == BOT_ALLIE)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneBotAllie, true);
-			else if (typeAgent == BOT_ENNEMI)
+			else if (_typeAgent == BOT_ENNEMI)
 				systemeExpertGangnam.SetFactValue(FactBase.collisionneBotEnnemi, true);
 			else
 				trace ("setFactCollision : typeAgent incorrect");
 		}
 		
-		private function setFactPerception():void 
+		private function setFactPerception(_typeAgent:int):void 
 		{
-			if (typeAgent == RESSOURCE)
+			if (_typeAgent == RESSOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteRessource, true);
-			else if (typeAgent == BASE_ALLIE)
+			else if (_typeAgent == BASE_ALLIE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteBaseAlliee, true);
-			else if (typeAgent == BASE_ENNEMIE)
+			else if (_typeAgent == BASE_ENNEMIE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteBaseEnnemie, true);
-			else if (typeAgent == BOT_ALLIE)
+			else if (_typeAgent == BOT_ALLIE)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteBotAllie, true);
-			else if (typeAgent == BOT_ENNEMI)
+			else if (_typeAgent == BOT_ENNEMI)
 				systemeExpertGangnam.SetFactValue(FactBase.detecteBotEnnemi, true);
 			else
 				trace ("setFactPerception : typeAgent incorrect");
@@ -145,17 +150,20 @@ package com.GangnamTeam
 			var agentActuel:Agent = _event.GetAgent();
 			
 			// Collision 
+			
 			if (IsCollided(agentActuel)) 
 			{
-				agentCollided = agentActuel;
-				isCollided = true;
+				listeAgentCollided.push(agentActuel);
+				listeAgentCollidedOrPercepted.push(IS_COLLIDED);
+				
 			}
 			// Perception
 			else
 			{
-				agentPercepted = agentActuel;
-				isPercepted = true;
+				listeAgentCollided.push(agentActuel);
+				listeAgentCollidedOrPercepted.push(IS_PERCEPTED);
 			}
+			var typeAgent:int;
 			if (agentActuel.GetType () == AgentType.AGENT_RESOURCE)
 				typeAgent = RESSOURCE;
 			else if (agentActuel.GetType () == AgentType.AGENT_BOT_HOME)
@@ -172,6 +180,7 @@ package com.GangnamTeam
 				else if (!isBotAllie(agentActuel as Bot))
 					typeAgent = BOT_ENNEMI;
 			}
+			listeAgentCollidedType.push(typeAgent);
 			//trace ("probleme typeAgent : " + typeAgent);
 			//if (!HasResource())
 		}
@@ -229,21 +238,21 @@ package com.GangnamTeam
 			if (tabFaitsFinaux [indice] == FactBase.vaExplorer) 	
 				Explorer();
 			else if (tabFaitsFinaux [indice] == FactBase.communiquerInfosRessource)
-				communiqueInformations(agentPercepted);
+				communiqueInformations();
 			else if (tabFaitsFinaux [indice] == FactBase.recupererInfosRessource)
 			{
-				recupereInformationsRessource(agentPercepted);
+				recupereInformationsRessource();
 				trace("recupereInformationsRessource");
 			}
 			else if (tabFaitsFinaux [indice] == FactBase.poseRessource)
 			{
 				trace("PoseRessource");
-				PoseRessource(agentCollided);
+				PoseRessource();
 			}
 			else if (tabFaitsFinaux [indice] == FactBase.prendRessource)
 			{
 				trace("PrendRessource");
-				PrendRessource(agentCollided);
+				PrendRessource();
 			}
 			else if (tabFaitsFinaux [indice] == FactBase.vaChercherRessourcePlusPres)
 				seDirigeVersLaRessourcePlusPres();
@@ -285,50 +294,73 @@ package com.GangnamTeam
 			 targetPoint.y = y + direction.y * speed * elapsedTime / 1000;
 		}
 		
-		public function communiqueInformations (_agent:Agent) : void
+		public function communiqueInformations () : void
 		{
 			//TODO
 		}
 		
-		public function recupereInformationsRessource (_agent:Agent) : void
+		public function recupereInformationsRessource () : void
 		{
 			//TODO : tester fonction
-			var maRessource:Ressource = getRessourceByPointeur(_agent);
-			if (maRessource != null)
+			var indice:int = 0;
+			var maRessource:Ressource;
+			for each (var agent:Agent in listeAgentCollided)
 			{
-				modifieRessource(maRessource, _agent);
-			}
-			else
-			{	
-				ajouteNouvelleRessource(_agent);
-			}
-		}
-		
-		public function PoseRessource (_collidedAgent:Agent) : void
-		{
-			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
-			{
-				(_collidedAgent as Resource).IncreaseLife();
-				SetResource(false);
-			}
-			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
-			{
-				(_collidedAgent as BotHome).AddResource();
-				SetResource(false);
+				if (listeAgentCollidedType[indice] == RESSOURCE || 
+					listeAgentCollidedType[indice] == BASE_ALLIE || 
+					listeAgentCollidedType[indice] == BASE_ENNEMIE)
+				{
+					maRessource = getRessourceByPointeur(agent);
+					if (maRessource != null)
+						modifieRessource(maRessource, agent);
+					else
+						ajouteNouvelleRessource(agent);
+				}
+				indice++;
 			}
 		}
 		
-		public function PrendRessource (_collidedAgent:Agent) : void
+		public function PoseRessource () : void
 		{
-			if (_collidedAgent.GetType () == AgentType.AGENT_RESOURCE)
+			var indice:int = 0;
+			for each (var agent:Agent in listeAgentCollided)
 			{
-				(_collidedAgent as Resource).DecreaseLife();
-				SetResource(true);
+				if (listeAgentCollidedOrPercepted[indice] == IS_COLLIDED)
+				{
+					if (agent.GetType () == AgentType.AGENT_RESOURCE)
+					{
+						(agent as Resource).IncreaseLife();
+						SetResource(false);
+					}
+					else if (agent.GetType() == AgentType.AGENT_BOT_HOME)
+					{
+						(agent as BotHome).AddResource();
+						SetResource(false);
+					}
+				}
+				indice++;
 			}
-			else if (_collidedAgent.GetType() == AgentType.AGENT_BOT_HOME)
+		}
+		
+		public function PrendRessource () : void
+		{
+			var indice:int = 0;
+			for each (var agent:Agent in listeAgentCollided)
 			{
-				(_collidedAgent as BotHome).TakeResource();
-				SetResource(true);
+				if (listeAgentCollidedOrPercepted[indice] == IS_COLLIDED)
+				{
+					if (agent.GetType () == AgentType.AGENT_RESOURCE)
+					{
+						(agent as Resource).DecreaseLife();
+						SetResource(true);
+					}
+					else if (agent.GetType() == AgentType.AGENT_BOT_HOME)
+					{
+						(agent as BotHome).TakeResource();
+						SetResource(true);
+					}
+				}
+				indice++;
 			}
 		}
 		
@@ -467,8 +499,12 @@ package com.GangnamTeam
 		
 		public function Reinit ():void
 		{
-			isCollided = false;
-			isPercepted = false;
+			while (listeAgentCollided.length > 0)
+			{
+				listeAgentCollided.pop();
+				listeAgentCollidedOrPercepted.pop();
+				listeAgentCollidedType.pop();
+			}
 		}
 	}
 

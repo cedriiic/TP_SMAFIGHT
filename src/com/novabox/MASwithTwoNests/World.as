@@ -184,11 +184,11 @@
 		
 		public function CheckCollisions() : void
 		{
-			for (var i:int = 0; i < agents.length; i++)
+			for (var i:int = 0; i < agents.length-1; i++)
 			{
 				var agent:Agent = agents[i];
 				
-				for (var j:int = i; j < agents.length; j++)
+				for (var j:int = i+1; j < agents.length; j++)
 				{
 					var collidedAgent:Agent = agents[j];
 					if (agent.hitTestObject(collidedAgent))
