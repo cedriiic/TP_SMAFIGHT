@@ -32,13 +32,13 @@
 		public static const collisionneBaseEnnemie:Fact	= new Fact("collisionneBaseEnnemie");
 		public static const collisionneBaseAlliee:Fact 	= new Fact("collisionneBaseAlliee");
 		
-		public static const aUnOrdre:Fact 				= new Fact("aUnOrdre");
-		public static const naPasDOrdre:Fact 			= new Fact("naPasDOrdre");
+		public static const estADestination:Fact 			= new Fact("estADestination");
+		public static const estEnChemin:Fact 				= new Fact("estEnChemin");
 		
 		public static const recupererInfosRessource:Fact 	= new Fact("recupererInfosRessource");
 		public static const communiquerInfosRessource:Fact 	= new Fact("communiquerInfosRessource");
 		//public static const recupereInfosBaseAlliee:Fact 	= new Fact("recupereInfosBaseAlliee");
-		//public static const recupereInfosBaseEnnemie:Fact 	= new Fact("recupereInfosBaseEnnemie");
+		//public static const recupereInfosBaseEnnemie:Fact = new Fact("recupereInfosBaseEnnemie");
 		
 		public static const poseRessource:Fact								= new Fact("poseRessource");
 		public static const prendRessource:Fact								= new Fact("prendRessource");
@@ -73,8 +73,8 @@
 			AddFact(collisionneBaseEnnemie);
 			AddFact(collisionneBaseAlliee);
 			
-			AddFact(aUnOrdre);
-			AddFact(naPasDOrdre);
+			AddFact(estADestination);
+			AddFact(estEnChemin);
 			
 			AddFact(recupererInfosRessource);
 			AddFact(communiquerInfosRessource);

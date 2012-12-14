@@ -38,6 +38,8 @@ package com.GangnamTeam
 		private var listeAgentCollidedOrPercepted:Array;
 		private var listeAgentCollidedType:Array;
 		
+		private var positionDestination:Point;
+		
 		protected var updateTime:Number;
 		
 		public function BotGangnam(_type:AgentType) 
@@ -47,6 +49,7 @@ package com.GangnamTeam
 			listeAgentCollided 				= new Array ();
 			listeAgentCollidedOrPercepted 	= new Array ();
 			listeAgentCollidedType			= new Array ();
+			positionDestination				= new Point (0,0);
 			updateTime 	= 0;
 			super(_type);
 		}
@@ -74,6 +77,7 @@ package com.GangnamTeam
 			setFactConnaitRessources ();
 			setFactPorteRessource ();
 			setFactIsBaseAllieeConnue ();
+			setFactEstADestination ();
 		}
 		
 		private function setFactCollisionPerception ():void
@@ -153,6 +157,16 @@ package com.GangnamTeam
 				systemeExpertGangnam.SetFactValue(FactBase.neConnaitPasBase, true);
 		}
 		
+		private function setFactEstADestination () : void
+		{
+			if (estDansLeRayonDArrivee ())
+			{
+				//trace ("est a destination");
+				systemeExpertGangnam.SetFactValue(FactBase.estADestination, true);
+			}
+			else
+				systemeExpertGangnam.SetFactValue(FactBase.estEnChemin, true);
+		}
 		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
 		{
@@ -231,11 +245,11 @@ package com.GangnamTeam
 			var indice:int;
 			
 			//trace("tableFaitsFinaux taille : " + tabFaitsFinaux.length);
-			//for each (var fait:Fact in tabFaitsFinaux)
-			//{
-				//trace ("fait : " + fait.GetLabel());
-			//}
-			//trace("########################################################");
+			for each (var fait:Fact in tabFaitsFinaux)
+			{
+				trace ("fait : " + fait.GetLabel());
+			}
+			trace("########################################################");
 			//if (tabFaitsFinaux.length == 1)
 				//indice = 0;
 			//else
@@ -271,10 +285,11 @@ package com.GangnamTeam
 		public function Explorer () : void
 		{
 			var elapsedTime:Number = TimeManager.timeManager.GetFrameDeltaTime();
+			var directionChangeDelayGangNam:Number = 2000;
 			
 			updateTime += elapsedTime;
 				
-			if (updateTime >=  directionChangeDelay)
+			if (updateTime >=  directionChangeDelayGangNam)
 			{
 				ChangeDirection();
 				updateTime = 0;
@@ -398,7 +413,8 @@ package com.GangnamTeam
 		
 		public function seDirigeVersLaRessourcePlusPres () : void
 		{
-			seDirigeVers(getPositionRessourceLaPlusPresAvecCapacite ());
+			positionDestination = getPositionRessourceLaPlusPresAvecCapacite ();
+			seDirigeVers(positionDestination);
 		}
 		
 		public function seDirigeVersLaRessourceAvecLePlusDeCapacite () : void
@@ -409,7 +425,8 @@ package com.GangnamTeam
 		
 		public function seDirigeVersLaBaseAlliee () : void
 		{
-			seDirigeVers(getPositionBaseAlliee());
+			positionDestination = getPositionBaseAlliee();
+			seDirigeVers(positionDestination);
 		}
 		
 		public function seDirigeVersLaBaseEnnemieLaPlusPres () : void
@@ -428,6 +445,11 @@ package com.GangnamTeam
 		/* ################################################################################################ */
 		/* ############################################## FONCTIONS ANNEXES ############################### */
 		/* ################################################################################################ */
+		
+		public function estDansLeRayonDArrivee () : Boolean
+		{
+			return ((Math.sqrt(Math.pow((this.x - positionDestination.x), 2) + Math.pow((this.y - positionDestination.y), 2))) < World.BOT_PERCEPTION_RADIUS);
+		}
 		
 		public function getPositionBaseAlliee () : Point
 		{
@@ -575,11 +597,6 @@ package com.GangnamTeam
 		public function getListeRessources():Array 
 		{
 			return listeRessources;
-		}
-		
-		public function setListeRessources(value:Array):void 
-		{
-			listeRessources = value;
 		}
 	}
 
