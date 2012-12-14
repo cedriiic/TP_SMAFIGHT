@@ -15,7 +15,7 @@
 			rules = new Array();
 			
 			//Recherche de ressource
-			
+			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource)));
 			AddRule(new Rule(FactBase.vaChercherRessourcePlusPres, new Array(FactBase.nePortePasDeRessource, FactBase.connaitDesRessources)));
 			
 			//Détection
@@ -32,10 +32,6 @@
 			AddRule(new Rule(FactBase.poseRessource, new Array(FactBase.porteRessource, FactBase.collisionneBaseAlliee)));
 			
 			//Porte une ressource
-			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource)));
-			
-			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource)));
-			
 			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource, FactBase.connaitBase)));
 			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.porteRessource, FactBase.neConnaitPasBase)));
 		}

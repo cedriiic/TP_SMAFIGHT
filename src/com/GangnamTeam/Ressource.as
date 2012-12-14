@@ -11,7 +11,7 @@ package com.GangnamTeam
 	{
 		private var temps:Number;
 		private var position:Point;
-		private var capacite:int;
+		private var capacite:Number;
 		private var pointeurRessource:Agent;
 		private var type:int;
 		
@@ -20,7 +20,7 @@ package com.GangnamTeam
 		public static const RESSOURCE:int = 3;
 		
 		
-		public function Ressource(_temps:Number, _position:Point, _capacite:int, _pointeurRessource:Agent, _type:int) 
+		public function Ressource(_temps:Number, _position:Point, _capacite:Number, _pointeurRessource:Agent, _type:int) 
 		{
 			temps 				= _temps;
 			position 			= _position;
@@ -49,12 +49,12 @@ package com.GangnamTeam
 			position = value;
 		}
 		
-		public function getCapacite():int 
+		public function getCapacite():Number 
 		{
 			return capacite;
 		}
 		
-		public function setCapacite(value:int):void 
+		public function setCapacite(value:Number):void 
 		{
 			capacite = value;
 		}
@@ -77,6 +77,15 @@ package com.GangnamTeam
 		public function setType(value:int):void 
 		{
 			type = value;
+		}
+		
+		public function duplique () : Ressource
+		{
+			return new Ressource (	temps, 
+									position, 
+									capacite, 
+									pointeurRessource, 
+									type);
 		}
 		
 		public function estPlusRecentQue (_autreRessource:Ressource) : Boolean

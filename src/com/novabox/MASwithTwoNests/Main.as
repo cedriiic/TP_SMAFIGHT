@@ -128,7 +128,7 @@
 			botCountField.x = 738;
 			botCountField.y = 100;
 			botCountField.setTextFormat(new TextFormat("arial", 11));
-			botCountField.text = "50";
+			botCountField.text = "1";
 
 			addChild(botCountField);
 
