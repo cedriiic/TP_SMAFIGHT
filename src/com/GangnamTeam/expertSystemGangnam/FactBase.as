@@ -13,32 +13,35 @@
 		
 		public var factValues:Array;
 		
-		public static const porteRessource:Fact 		= new Fact("porteRessource");
-		public static const nePortePasDeRessource:Fact 	= new Fact("nePortePasDeRessource");
-		public static const neConnaitPasDeRessource:Fact = new Fact("neConnaitPasDeRessource");
-		public static const connaitDesRessources:Fact	= new Fact("connaitRessource");
-		public static const connaitBase:Fact			= new Fact("connaitBase");
-		public static const neConnaitPasBase:Fact		= new Fact("neConnaitPasBase");
+		public static const destinationEstBaseAllie:Fact 	= new Fact("destinationEstBaseAllie");
+		public static const destinationEstRessource:Fact 	= new Fact("destinationEstRessource");
 		
-		public static const detecteRessource:Fact 		= new Fact("detecteRessource");
-		public static const detecteBotEnnemi:Fact 		= new Fact("detecteBotEnnemi");
-		public static const detecteBotAllie:Fact 		= new Fact("detecteBotAllie");
-		public static const detecteBaseEnnemie:Fact 	= new Fact("detecteBaseEnnemie");
-		public static const detecteBaseAlliee:Fact 		= new Fact("detecteBaseAlliee");
+		public static const porteRessource:Fact 			= new Fact("porteRessource");
+		public static const nePortePasDeRessource:Fact 		= new Fact("nePortePasDeRessource");
+		public static const neConnaitPasDeRessource:Fact 	= new Fact("neConnaitPasDeRessource");
+		public static const connaitDesRessources:Fact		= new Fact("connaitRessource");
+		public static const connaitBase:Fact				= new Fact("connaitBase");
+		public static const neConnaitPasBase:Fact			= new Fact("neConnaitPasBase");
 		
-		public static const collisionneRessource:Fact 	= new Fact("collisionneRessource");
-		public static const collisionneBotEnnemi:Fact 	= new Fact("collisionneBotEnnemi");
-		public static const collisionneBotAllie:Fact 	= new Fact("collisionneBotAllie");
-		public static const collisionneBaseEnnemie:Fact	= new Fact("collisionneBaseEnnemie");
-		public static const collisionneBaseAlliee:Fact 	= new Fact("collisionneBaseAlliee");
+		public static const detecteRessource:Fact 			= new Fact("detecteRessource");
+		public static const detecteBotEnnemi:Fact 			= new Fact("detecteBotEnnemi");
+		public static const detecteBotAllie:Fact 			= new Fact("detecteBotAllie");
+		public static const detecteBaseEnnemie:Fact 		= new Fact("detecteBaseEnnemie");
+		public static const detecteBaseAlliee:Fact 			= new Fact("detecteBaseAlliee");
+		public static const detecteAgentDestination:Fact 	= new Fact("detecteAgentDestination");
+		public static const neDetectePasAgentDestination:Fact = new Fact("neDetectePasAgentDestination");
+		
+		public static const collisionneRessource:Fact 		= new Fact("collisionneRessource");
+		public static const collisionneBotEnnemi:Fact 		= new Fact("collisionneBotEnnemi");
+		public static const collisionneBotAllie:Fact 		= new Fact("collisionneBotAllie");
+		public static const collisionneBaseEnnemie:Fact		= new Fact("collisionneBaseEnnemie");
+		public static const collisionneBaseAlliee:Fact 		= new Fact("collisionneBaseAlliee");
 		
 		public static const estADestination:Fact 			= new Fact("estADestination");
 		public static const estEnChemin:Fact 				= new Fact("estEnChemin");
 		
 		public static const recupererInfosRessource:Fact 	= new Fact("recupererInfosRessource");
 		public static const communiquerInfosRessource:Fact 	= new Fact("communiquerInfosRessource");
-		//public static const recupereInfosBaseAlliee:Fact 	= new Fact("recupereInfosBaseAlliee");
-		//public static const recupereInfosBaseEnnemie:Fact = new Fact("recupereInfosBaseEnnemie");
 		
 		public static const poseRessource:Fact								= new Fact("poseRessource");
 		public static const prendRessource:Fact								= new Fact("prendRessource");
@@ -48,11 +51,17 @@
 		public static const vaALaBaseAlliee:Fact							= new Fact("vaALaBaseAlliee");
 		public static const vaALaBaseEnnemieLaPlusPres:Fact					= new Fact("vaALaBaseEnnemieLaPlusPres");
 		public static const vaALaBaseEnnemieAvecLePlusDeCapacite:Fact		= new Fact("vaALaBaseEnnemieAvecLePlusDeCapacite");
+		public static const resetCapaciteRessource:Fact						= new Fact("resetCapaciteRessource");
+		public static const setBaseNonConnue:Fact							= new Fact("setBaseNonConnue");
+		
 		
 		public function FactBase() 
 		{
 			facts = new Array();
 			factValues = new Array();
+			
+			AddFact(destinationEstBaseAllie);
+			AddFact(destinationEstRessource);
 			
 			AddFact(porteRessource);
 			AddFact(nePortePasDeRessource);
@@ -66,6 +75,8 @@
 			AddFact(detecteBotAllie);
 			AddFact(detecteBaseEnnemie);
 			AddFact(detecteBaseAlliee);
+			AddFact(detecteAgentDestination);
+			AddFact(neDetectePasAgentDestination);
 			
 			AddFact(collisionneRessource);
 			AddFact(collisionneBotEnnemi);
@@ -87,6 +98,8 @@
 			AddFact(vaALaBaseAlliee);
 			AddFact(vaALaBaseEnnemieLaPlusPres);
 			AddFact(vaALaBaseEnnemieAvecLePlusDeCapacite);
+			AddFact(resetCapaciteRessource);
+			AddFact(setBaseNonConnue);
 			
 			
 			// ******************************************* FIN BASE DE FAITS *****************************************
