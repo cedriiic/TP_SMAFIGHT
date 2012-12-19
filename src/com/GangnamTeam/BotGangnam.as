@@ -686,39 +686,35 @@ package com.GangnamTeam
 		{
 			direction.x = Math.random();
 			direction.y = Math.random();
-			if (x < 100)
+			if (x < (World.WORLD_WIDTH * 0.1))
 			{
-				if (Math.random() < 0.2)
+				direction.x *= 1;
+			}
+			else if (x > (World.WORLD_WIDTH * 0.9))
+			{
+				direction.x *= -1;
+			}
+			else
+			{
+				if (Math.random() < 0.5)
 				{
 					direction.x *= -1;
 				}
 			}
-			else
-			{
-				if (x > 550)
-				{
-					if (Math.random() < 0.8)
-					{
-						direction.x *= -1;
-					}
-				}
-			}
 			
-			if (y < 100)
+			if (y < (World.WORLD_HEIGHT * 0.1))
 			{
-				if (Math.random() < 0.2)
+				direction.y *= 1;
+			}
+			else if (y > (World.WORLD_HEIGHT * 0.9))
+			{
+				direction.y *= -1;
+			}
+			else 
+			{
+				if (Math.random() < 0.5)
 				{
 					direction.y *= -1;
-				}
-			}
-			else
-			{
-				if (y > 500)
-				{
-					if (Math.random() < 0.8)
-					{
-						direction.y *= -1;
-					}
 				}
 			}
 			direction.normalize(1);
