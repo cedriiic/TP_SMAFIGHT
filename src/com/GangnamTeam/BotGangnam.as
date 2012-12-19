@@ -682,6 +682,48 @@ package com.GangnamTeam
 			return isBaseConnue;
 		}
 		
+		override public function ChangeDirection() : void
+		{
+			direction.x = Math.random();
+			direction.y = Math.random();
+			if (x < 100)
+			{
+				if (Math.random() < 0.2)
+				{
+					direction.x *= -1;
+				}
+			}
+			else
+			{
+				if (x > 550)
+				{
+					if (Math.random() < 0.8)
+					{
+						direction.x *= -1;
+					}
+				}
+			}
+			
+			if (y < 100)
+			{
+				if (Math.random() < 0.2)
+				{
+					direction.y *= -1;
+				}
+			}
+			else
+			{
+				if (y > 500)
+				{
+					if (Math.random() < 0.8)
+					{
+						direction.y *= -1;
+					}
+				}
+			}
+			direction.normalize(1);
+		}
+		
 	}
 
 }
