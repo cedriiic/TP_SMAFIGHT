@@ -71,7 +71,8 @@ package com.GangnamTeam
 		/* ################################################################################################ */
 		
 		
-		public function Perception() : void {
+		public function Perception() : void 
+		{
 			// On reset les faits
 			systemeExpertGangnam.ResetFacts();
 			
@@ -183,6 +184,8 @@ package com.GangnamTeam
 				else
 					systemeExpertGangnam.SetFactValue(FactBase.neDetectePasAgentDestination, true);
 			}
+			else
+				trace ("probleme setFactDetecteAgentDestination");
 		}
 		
 		private function setFactTypeAgentDestination () : void
@@ -242,7 +245,8 @@ package com.GangnamTeam
 		/* ################################################################################################ */		
 		
 		
-		public function Analyse() : void {
+		public function Analyse() : void 
+		{
 
 			systemeExpertGangnam.InferForward();
 			
@@ -268,7 +272,8 @@ package com.GangnamTeam
 		/* ################################################################################################ */		
 		
 		
-		public function Action() : void {
+		public function Action() : void 
+		{
 			// Recupere le ou les faits finaux (normalement un seul)
 			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
 			var indice:int;
@@ -311,7 +316,7 @@ package com.GangnamTeam
 				else if (faitFinal == FactBase.resetCapaciteRessource)
 					resetCapaciteRessourceDestination ();
 				else if (faitFinal == FactBase.setBaseNonConnue)
-					setIsBaseConnue(false);
+					oublieBase();
 			}
 		}
 		
@@ -350,16 +355,14 @@ package com.GangnamTeam
 						var maRessource:Ressource = getRessourceByPointeurAgent(ressource.getPointeurRessource());
 						if (maRessource != null)
 						{
-							// Si notre ressource n'est pas plus recente que l'autre ressource
-							if (!maRessource.estPlusRecentQue(ressource))
+							// Si la ressource est plus recente que notre ressource
+							if (ressource.estPlusRecentQue(maRessource))
 							{
 								if (ressource.getType() == Ressource.BASE_ALLIEE)
 								{
 									if (BotGangnam(agent).getIsBaseConnue())
-									{
 										maRessource.miseAJourDonnees(ressource);
-										setIsBaseConnue (true);
-									}
+									setIsBaseConnue (BotGangnam(agent).getIsBaseConnue());
 								}
 								else
 									maRessource.miseAJourDonnees(ressource);
@@ -369,6 +372,8 @@ package com.GangnamTeam
 						else
 						{
 							listeRessources.push(ressource.duplique());
+							if (ressource.getType() == Ressource.BASE_ALLIEE)
+								isBaseConnue = BotGangnam(agent).getIsBaseConnue();
 						}
 					}
 				}
@@ -488,8 +493,20 @@ package com.GangnamTeam
 		{
 			var ressource:Ressource = getRessourceDansListeParPosition(positionDestination);
 			if (ressource != null)
+			{
 				ressource.setCapacite(0);
+				ressource.setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+			}
+			else
+				trace ("probleme dans resetCapaciteRessourceDestination");
 		}
+		
+		public function oublieBase () : void
+		{
+			isBaseConnue = false;
+			getBaseAllieeInListe ().setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+		}
+		
 		
 		/* ################################################################################################ */
 		/* ############################################## FONCTIONS ANNEXES ############################### */
@@ -520,13 +537,21 @@ package com.GangnamTeam
 			return ((Math.sqrt(Math.pow((this.x - positionDestination.x), 2) + Math.pow((this.y - positionDestination.y), 2))) < World.BOT_PERCEPTION_RADIUS);
 		}
 		
-		public function getPositionBaseAlliee () : Point
+		public function getBaseAllieeInListe () : Ressource
 		{
 			for each (var ressource:Ressource in listeRessources)
 			{
 				if (ressource.getType() == Ressource.BASE_ALLIEE)
-					return ressource.getPosition();
+					return ressource;
 			}
+			return null;
+		}
+		
+		public function getPositionBaseAlliee () : Point
+		{
+			var ressourceBaseAllie:Ressource = getBaseAllieeInListe ();
+			if (ressourceBaseAllie != null)
+				return ressourceBaseAllie.getPosition();
 			return null;
 		}
 		
@@ -577,8 +602,8 @@ package com.GangnamTeam
 			
 			listeRessources.push(new Ressource(temps, position, capacite, pointeur, type));
 			
-			if (getTypeDe(_agent) == Ressource.BASE_ALLIEE)
-				setIsBaseConnue (true);
+			if (getRessourceByPointeurAgent(_agent).getType() == Ressource.BASE_ALLIEE)
+				isBaseConnue = true;
 		}
 		
 		public function modifieRessource(_ressource:Ressource, _agent:Agent):void 
@@ -586,6 +611,8 @@ package com.GangnamTeam
 			_ressource.setPosition(_agent.GetTargetPoint());
 			_ressource.setTemps(TimeManager.timeManager.GetFrameDeltaTime());
 			_ressource.setCapacite(getCapaciteDe(_agent));
+			if (_ressource.getType() == Ressource.BASE_ALLIEE)
+				isBaseConnue = true;
 		}
 		
 		public function setIsBaseConnue(_bool:Boolean):void 
