@@ -38,7 +38,7 @@ package com.GangnamTeam
 		private var listeAgentCollidedOrPercepted:Array;
 		private var listeAgentCollidedType:Array;
 		
-		private var positionDestination:Point;
+		private var ressourceDeDestination:Ressource;
 		
 		private var isBaseConnue:Boolean;
 		
@@ -51,7 +51,7 @@ package com.GangnamTeam
 			listeAgentCollided 				= new Array ();
 			listeAgentCollidedOrPercepted 	= new Array ();
 			listeAgentCollidedType			= new Array ();
-			positionDestination				= new Point (0,0);
+			ressourceDeDestination 			= new Ressource (0, new Point(0, 0), 0, new Agent(new AgentType()), -1);
 			updateTime 		= 0;
 			isBaseConnue 	= false;
 			super(_type);
@@ -59,6 +59,7 @@ package com.GangnamTeam
 		
 		override public function Update() : void
 		{
+			DrawSprite();
 			Perception();
 			Analyse();
 			Action();
@@ -166,38 +167,38 @@ package com.GangnamTeam
 		private function setFactEstADestination () : void
 		{
 			if (estDansLeRayonDArrivee ())
-			{
-				//trace ("est a destination");
 				systemeExpertGangnam.SetFactValue(FactBase.estADestination, true);
-			}
 			else
 				systemeExpertGangnam.SetFactValue(FactBase.estEnChemin, true);
 		}
 		
 		private function setFactDetecteAgentDestination () : void
 		{
-			var ressoureDestination:Ressource = getRessourceDansListeParPosition (positionDestination);
-			if (ressoureDestination != null)
+			if (ressourceDeDestination != null)
 			{
-				if (isAgentPercepted(ressoureDestination.getPointeurRessource()))
+				if (isAgentPercepted(ressourceDeDestination.getPointeurRessource()))
 					systemeExpertGangnam.SetFactValue(FactBase.detecteAgentDestination, true);
 				else
 					systemeExpertGangnam.SetFactValue(FactBase.neDetectePasAgentDestination, true);
 			}
 			else
-				trace ("probleme setFactDetecteAgentDestination");
+			{
+				systemeExpertGangnam.SetFactValue(FactBase.neDetectePasAgentDestination, true);
+				//trace ("probleme setFactDetecteAgentDestination : ressourceDeDestination Null");
+			}
 		}
 		
 		private function setFactTypeAgentDestination () : void
 		{
-			var ressourceDestination:Ressource = getRessourceDansListeParPosition (positionDestination);
-			if (ressourceDestination != null)
+			if (ressourceDeDestination != null)
 			{
-				if (ressourceDestination.getType() == Ressource.BASE_ALLIEE)
+				if (ressourceDeDestination.getType() == Ressource.BASE_ALLIEE)
 				systemeExpertGangnam.SetFactValue(FactBase.destinationEstBaseAllie, true);
-			else if (ressourceDestination.getType() == Ressource.RESSOURCE)
+			else if (ressourceDeDestination.getType() == Ressource.RESSOURCE)
 				systemeExpertGangnam.SetFactValue(FactBase.destinationEstRessource, true);
 			}
+			//else
+				//trace ("probleme setFactTypeAgentDestination : ressourceDeDestination Null");	
 		}
 		
 		override public function onAgentCollide(_event:AgentCollideEvent) : void
@@ -362,7 +363,7 @@ package com.GangnamTeam
 								{
 									if (BotGangnam(agent).getIsBaseConnue())
 										maRessource.miseAJourDonnees(ressource);
-									setIsBaseConnue (BotGangnam(agent).getIsBaseConnue());
+									isBaseConnue = BotGangnam(agent).getIsBaseConnue();
 								}
 								else
 									maRessource.miseAJourDonnees(ressource);
@@ -461,8 +462,11 @@ package com.GangnamTeam
 		
 		public function seDirigeVersLaRessourcePlusPres () : void
 		{
-			positionDestination = getPositionRessourceLaPlusPresAvecCapacite ();
-			seDirigeVers(positionDestination);
+			ressourceDeDestination = getRessourceLaPlusPresAvecCapacite ();
+			if (ressourceDeDestination != null)
+				seDirigeVers(ressourceDeDestination.getPosition());
+			else
+				trace ("probleme seDirigeVersLaRessourcePlusPres : ressourceDeDestination null");
 		}
 		
 		public function seDirigeVersLaRessourceAvecLePlusDeCapacite () : void
@@ -473,8 +477,8 @@ package com.GangnamTeam
 		
 		public function seDirigeVersLaBaseAlliee () : void
 		{
-			positionDestination = getPositionBaseAlliee();
-			seDirigeVers(positionDestination);
+			ressourceDeDestination = getBaseAllieeInListe ();
+			seDirigeVers(ressourceDeDestination.getPosition());
 		}
 		
 		public function seDirigeVersLaBaseEnnemieLaPlusPres () : void
@@ -491,20 +495,20 @@ package com.GangnamTeam
 		
 		public function resetCapaciteRessourceDestination () : void
 		{
-			var ressource:Ressource = getRessourceDansListeParPosition(positionDestination);
-			if (ressource != null)
+			if (ressourceDeDestination != null)
 			{
-				ressource.setCapacite(0);
-				ressource.setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+				ressourceDeDestination.setCapacite(0);
+				ressourceDeDestination.setTemps(TimeManager.timeManager.GetApplicationTime());
 			}
 			else
-				trace ("probleme dans resetCapaciteRessourceDestination");
+				trace ("probleme resetCapaciteRessourceDestination : ressourceDeDestination null");
 		}
 		
 		public function oublieBase () : void
 		{
 			isBaseConnue = false;
-			getBaseAllieeInListe ().setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+			var ressourceBase:Ressource = getBaseAllieeInListe ();
+			ressourceBase.setTemps(TimeManager.timeManager.GetApplicationTime());
 		}
 		
 		
@@ -534,7 +538,19 @@ package com.GangnamTeam
 		
 		public function estDansLeRayonDArrivee () : Boolean
 		{
-			return ((Math.sqrt(Math.pow((this.x - positionDestination.x), 2) + Math.pow((this.y - positionDestination.y), 2))) < World.BOT_PERCEPTION_RADIUS);
+			
+			var positionDestination:Point
+			if (ressourceDeDestination != null)
+			{
+				positionDestination = ressourceDeDestination.getPosition();
+				return ((Math.sqrt(Math.pow((this.x - positionDestination.x), 2) + Math.pow((this.y - positionDestination.y), 2))) < World.BOT_PERCEPTION_RADIUS);	
+			}
+			else
+			{
+				//trace ("probleme estDansLeRayonDArrivee : ressourceDeDestination null");
+				return false;
+			}
+			
 		}
 		
 		public function getBaseAllieeInListe () : Ressource
@@ -555,29 +571,43 @@ package com.GangnamTeam
 			return null;
 		}
 		
-		public function getPositionRessourceLaPlusPresAvecCapacite () : Point
+		public function getRessourceLaPlusPresAvecCapacite () : Ressource
 		{
 			var ressourcePlusPres:Ressource;
-			for each (var ressource:Ressource in listeRessources)
+			if (isRessourcesConnuesDisponibles())
 			{
-				if ((ressource.getType() != Ressource.BASE_ALLIEE) && (ressource.getCapacite() > 0))
+				for each (var ressource:Ressource in listeRessources)
 				{
-					if (ressourcePlusPres == null)
-						ressourcePlusPres = ressource;
-					else
+					if ((ressource.getType() != Ressource.BASE_ALLIEE) && (ressource.getCapacite() > 0))
 					{
-						if ((Math.sqrt(Math.pow((this.x - ressource.getPosition().x), 2) + Math.pow((this.y - ressource.getPosition().y), 2))
-						) < (Math.sqrt(Math.pow((this.x - ressourcePlusPres.getPosition().x), 2) + Math.pow((this.y - ressourcePlusPres.getPosition().y), 2))))
+						if (ressourcePlusPres == null)
 							ressourcePlusPres = ressource;
+						else
+						{
+							if ((Math.sqrt(Math.pow((this.x - ressource.getPosition().x), 2) + Math.pow((this.y - ressource.getPosition().y), 2))
+							) < (Math.sqrt(Math.pow((this.x - ressourcePlusPres.getPosition().x), 2) + Math.pow((this.y - ressourcePlusPres.getPosition().y), 2))))
+								ressourcePlusPres = ressource;
+						}
 					}
 				}
+				return ressourcePlusPres;
 			}
-			if (isRessourcesConnuesDisponibles())
-				return ressourcePlusPres.getPosition();
+			else
+			{
+				return null;
+				trace ("getRessourceLaPlusPresAvecCapacite : aucune ressource dispo");
+			}
+		}
+		
+		public function getPositionRessourceLaPlusPresAvecCapacite () : Point
+		{
+			var ressource:Ressource = getRessourceLaPlusPresAvecCapacite ();
+			if (ressource != null)
+				return ressource.getPosition();
 			else
 			{
 				return new Point (this.x, this.y);
-				trace ("getPositionRessourceLaPlusPresAvecCapacite : aucune ressource dispo");
+				trace ("probleme getPositionRessourceLaPlusPresAvecCapacite : ressource null");
 			}
 		}
 		
@@ -596,23 +626,36 @@ package com.GangnamTeam
 			
 			type = getTypeDe(_agent);
 			pointeur = _agent;
-			position = _agent.GetTargetPoint();
-			temps = TimeManager.timeManager.GetFrameDeltaTime();
+			// TODO : verifier que l'on prends les bons points actuels
+			//position = _agent.GetTargetPoint();
+			position = new Point (_agent.x, _agent.y);
+			temps = TimeManager.timeManager.GetApplicationTime();
 			capacite = getCapaciteDe(_agent);
 			
 			listeRessources.push(new Ressource(temps, position, capacite, pointeur, type));
 			
-			if (getRessourceByPointeurAgent(_agent).getType() == Ressource.BASE_ALLIEE)
+			var ressource:Ressource = getRessourceByPointeurAgent(_agent);
+			if (ressource != null)
+			{
+				if (ressource.getType() == Ressource.BASE_ALLIEE)
 				isBaseConnue = true;
+			}
+			else
+				trace("probleme ajouteNouvelleRessource : ressource null");
+			
+			//trace ("ajout ressource : " + ressource.getPointeurRessource().toString() + " & temps : " + ressource.getTemps()); 
 		}
 		
 		public function modifieRessource(_ressource:Ressource, _agent:Agent):void 
 		{
-			_ressource.setPosition(_agent.GetTargetPoint());
-			_ressource.setTemps(TimeManager.timeManager.GetFrameDeltaTime());
+			// TODO : verifier que l'on prends les bons points actuels
+			//_ressource.setPosition(_agent.GetTargetPoint());
+			_ressource.setPosition(new Point(_agent.x, _agent.y));
+			_ressource.setTemps(TimeManager.timeManager.GetApplicationTime());
 			_ressource.setCapacite(getCapaciteDe(_agent));
 			if (_ressource.getType() == Ressource.BASE_ALLIEE)
 				isBaseConnue = true;
+			//trace ("modif ressource : " + _ressource.getPointeurRessource().toString() + " & temps : " + _ressource.getTemps()); 
 		}
 		
 		public function setIsBaseConnue(_bool:Boolean):void 
@@ -684,7 +727,10 @@ package com.GangnamTeam
 			for each (var ressource:Ressource in listeRessources)
 			{
 				if (_agent == ressource.getPointeurRessource())
+				{
+					//trace ("no pb !");
 					return ressource;
+				}
 			}
 			return null;
 		}
@@ -746,6 +792,24 @@ package com.GangnamTeam
 			}
 			direction.normalize(1);
 		}
+		
+		override protected function DrawSprite() : void
+	   {
+			var botColor:int = 0x00FF00;			   
+			botSprite.graphics.clear();
+			if ( HasResource())
+			{
+			   botColor = 0xFF0000;
+			   botSprite.graphics.lineStyle(1, 0x00FF00, 1);
+			}
+			else {
+			   botColor = 0x00FF00;
+			   botSprite.graphics.lineStyle(0, 0x00FF00, 0);
+			}
+			botSprite.graphics.beginFill(botColor, 1);
+			botSprite.graphics.drawCircle(0, 0, radius);
+			botSprite.graphics.endFill();
+	   }
 		
 	}
 

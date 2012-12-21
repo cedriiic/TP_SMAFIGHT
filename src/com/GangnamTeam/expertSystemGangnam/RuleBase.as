@@ -29,15 +29,18 @@
 
 			//Porte une ressource
 			AddRule(new Rule(FactBase.vaChercherRessourcePlusPres, new Array(FactBase.nePortePasDeRessource, FactBase.connaitDesRessources)));
+			
 			AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource, FactBase.connaitBase)));
+			//AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource, FactBase.connaitBase, FactBase.estEnChemin)));
+			//AddRule(new Rule(FactBase.vaALaBaseAlliee, new Array(FactBase.porteRessource, FactBase.connaitBase, FactBase.estADestination, FactBase.destinationEstBaseAllie, FactBase.detecteBaseAlliee)));
 			
 			//Recherche de ressource
-			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource, FactBase.connaitBase)));
-			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.neConnaitPasBase)));
+			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.nePortePasDeRessource, FactBase.neConnaitPasDeRessource)));
+			AddRule(new Rule(FactBase.vaExplorer, new Array(FactBase.neConnaitPasBase, FactBase.porteRessource)));
 			
 			// Lorsque la ressource n'est plus visible
 			AddRule(new Rule(FactBase.resetCapaciteRessource, new Array(FactBase.estADestination, FactBase.neDetectePasAgentDestination, FactBase.destinationEstRessource)));
-			AddRule(new Rule(FactBase.setBaseNonConnue, new Array(FactBase.estADestination, FactBase.neDetectePasAgentDestination, FactBase.destinationEstBaseAllie, FactBase.connaitBase)));
+			AddRule(new Rule(FactBase.setBaseNonConnue, new Array(FactBase.porteRessource, FactBase.connaitBase, FactBase.estADestination, FactBase.destinationEstBaseAllie, FactBase.neDetectePasAgentDestination)));
 		}
 
 		public function AddRule(_rule:Rule) : void

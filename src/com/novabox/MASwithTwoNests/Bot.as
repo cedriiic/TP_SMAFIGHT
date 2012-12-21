@@ -100,7 +100,7 @@
 			
 			botSprite.graphics.clear();
 			botSprite.graphics.beginFill(botColor, 1);
-				botSprite.graphics.drawCircle(0, 0, radius);
+			botSprite.graphics.drawCircle(0, 0, radius);
 			botSprite.graphics.endFill();
 		}
 

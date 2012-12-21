@@ -95,15 +95,9 @@ package com.GangnamTeam
 		
 		public function miseAJourDonnees (_autreRessource:Ressource) : void
 		{
-			if (this.pointeurRessource == _autreRessource.getPointeurRessource())
-			{
-				if (!estPlusRecentQue (_autreRessource))
-				{
-					this.temps 		= _autreRessource.getTemps();
-					this.capacite 	= _autreRessource.getCapacite();
-					this.position 	= _autreRessource.getPosition();
-				}
-			}
+			this.temps 		= _autreRessource.getTemps();
+			this.capacite 	= _autreRessource.getCapacite();
+			this.position 	= _autreRessource.getPosition();
 		}
 	}
 
