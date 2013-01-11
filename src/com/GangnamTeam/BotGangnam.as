@@ -229,7 +229,7 @@ package com.GangnamTeam
 				else if (!isBaseAlliee(agentActuel as BotHome))
 					typeAgent = BASE_ENNEMIE;
 			}
-			else //if (agentActuel.GetType () == AgentType.AGENT_BOT)
+			else
 			{
 				if (isBotAllie(agentActuel as Bot))
 					typeAgent = BOT_ALLIE;
@@ -238,7 +238,6 @@ package com.GangnamTeam
 			}
 			listeAgentCollidedType.push(typeAgent);
 			//trace ("probleme typeAgent : " + typeAgent);
-			//if (!HasResource())
 		}
 		
 		/* ################################################################################################ */
@@ -248,23 +247,7 @@ package com.GangnamTeam
 		
 		public function Analyse() : void 
 		{
-
 			systemeExpertGangnam.InferForward();
-			
-			//var inferedFacts:Array = systemeExpertGangnam.GetInferedFacts();
-			//for each(var inferedFact:Fact in inferedFacts)
-			//{
-				//trace("        Infered Facts:" + inferedFact.GetLabel());
-			//}
-
-			//systemeExpertGangnam.InferBackward();
-			
-			//var factsToAsk:Array = systemeExpertGangnam.GetFactsToAsk();
-			//trace("Facts to ask :");
-			//for each(var factToAsk:Fact in factsToAsk)
-			//{
-				//trace(factToAsk.GetLabel());
-			//}
 		}
 		
 		
@@ -278,19 +261,6 @@ package com.GangnamTeam
 			// Recupere le ou les faits finaux (normalement un seul)
 			var tabFaitsFinaux:Array = systemeExpertGangnam.GetInferedFacts();
 			var indice:int;
-			
-			//trace("tableFaitsFinaux taille : " + tabFaitsFinaux.length);
-			//for each (var fait:Fact in tabFaitsFinaux)
-			//{
-				//trace ("fait : " + fait.GetLabel());
-			//}
-			//trace("########################################################");
-			//if (tabFaitsFinaux.length == 1)
-				//indice = 0;
-			//else
-				// Comme la table de regle va de check/Fold à Raise, on prend la dernier indice, ce qui permet de choisir de suivre meme si une regle check/fold est vraie 
-				//(normalement cette confrontation de regles est impossible, simple sécurité) 
-				//indice = tabFaitsFinaux.length - 1;
 			
 			for each(var faitFinal:Fact in tabFaitsFinaux)
 			{
@@ -465,8 +435,8 @@ package com.GangnamTeam
 			ressourceDeDestination = getRessourceLaPlusPresAvecCapacite ();
 			if (ressourceDeDestination != null)
 				seDirigeVers(ressourceDeDestination.getPosition());
-			else
-				trace ("probleme seDirigeVersLaRessourcePlusPres : ressourceDeDestination null");
+			//else
+				//trace ("probleme seDirigeVersLaRessourcePlusPres : ressourceDeDestination null");
 		}
 		
 		public function seDirigeVersLaRessourceAvecLePlusDeCapacite () : void
@@ -500,8 +470,8 @@ package com.GangnamTeam
 				ressourceDeDestination.setCapacite(0);
 				ressourceDeDestination.setTemps(TimeManager.timeManager.GetApplicationTime());
 			}
-			else
-				trace ("probleme resetCapaciteRessourceDestination : ressourceDeDestination null");
+			//else
+				//trace ("probleme resetCapaciteRessourceDestination : ressourceDeDestination null");
 		}
 		
 		public function oublieBase () : void
@@ -595,7 +565,7 @@ package com.GangnamTeam
 			else
 			{
 				return null;
-				trace ("getRessourceLaPlusPresAvecCapacite : aucune ressource dispo");
+				//trace ("getRessourceLaPlusPresAvecCapacite : aucune ressource dispo");
 			}
 		}
 		
@@ -607,7 +577,7 @@ package com.GangnamTeam
 			else
 			{
 				return new Point (this.x, this.y);
-				trace ("probleme getPositionRessourceLaPlusPresAvecCapacite : ressource null");
+				//trace ("probleme getPositionRessourceLaPlusPresAvecCapacite : ressource null");
 			}
 		}
 		
@@ -640,8 +610,8 @@ package com.GangnamTeam
 				if (ressource.getType() == Ressource.BASE_ALLIEE)
 				isBaseConnue = true;
 			}
-			else
-				trace("probleme ajouteNouvelleRessource : ressource null");
+			//else
+				//trace("probleme ajouteNouvelleRessource : ressource null");
 			
 			//trace ("ajout ressource : " + ressource.getPointeurRessource().toString() + " & temps : " + ressource.getTemps()); 
 		}
@@ -677,7 +647,7 @@ package com.GangnamTeam
 			return 0;
 		}
 		
-		public function getCapaciteDe(_agent:Agent):int 
+		public function getCapaciteDe(_agent:Agent):Number 
 		{
 			if (_agent.GetType () == AgentType.AGENT_RESOURCE)
 				return (_agent as Resource).GetLife();
