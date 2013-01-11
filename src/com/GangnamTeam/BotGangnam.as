@@ -465,8 +465,8 @@ package com.GangnamTeam
 			ressourceDeDestination = getRessourceLaPlusPresAvecCapacite ();
 			if (ressourceDeDestination != null)
 				seDirigeVers(ressourceDeDestination.getPosition());
-			else
-				trace ("probleme seDirigeVersLaRessourcePlusPres : ressourceDeDestination null");
+			//else
+				//trace ("probleme seDirigeVersLaRessourcePlusPres : ressourceDeDestination null");
 		}
 		
 		public function seDirigeVersLaRessourceAvecLePlusDeCapacite () : void
@@ -677,7 +677,7 @@ package com.GangnamTeam
 			return 0;
 		}
 		
-		public function getCapaciteDe(_agent:Agent):int 
+		public function getCapaciteDe(_agent:Agent):Number 
 		{
 			if (_agent.GetType () == AgentType.AGENT_RESOURCE)
 				return (_agent as Resource).GetLife();
